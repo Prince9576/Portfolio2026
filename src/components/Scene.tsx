@@ -18,14 +18,27 @@ const Scene = () => {
 
     const lights = useMemo(() => {
         return [
+            // Very subtle ambient to prevent pure black shadows
+            {
+                type: 'ambientLight',
+                intensity: 0.05
+            },
             // Left rect area light (Purple)
             {
                 type: 'rectAreaLight',
                 position: [-6.5, 2, 6.5] as [number, number, number],
                 rotation: [0, 0, 0] as [number, number, number],
                 color: '#A26BFF',
-                power: 35,
+                power: 20,
                 size: 3
+            },
+            // Left subtle fill light (no shadows for performance)
+            {
+                type: 'directionalLight',
+                position: [-6.5, 2, 6.5] as [number, number, number],
+                color: '#3d2860',
+                intensity: 1,
+                castShadow: true
             },
             // Right rect area light (Blue)
             {
@@ -36,23 +49,24 @@ const Scene = () => {
                 power: 25,
                 size: 3
             },
+            // Right subtle fill light (no shadows for performance)
+            {
+                type: 'directionalLight',
+                position: [4, 2, 10] as [number, number, number],
+                color: '#2a3d6b',
+                intensity: 1,
+                castShadow: true
+            },
             // Top rect area light (White/Blue)
             {
                 type: 'rectAreaLight',
                 position: [-0.5, 2.5, -1.5] as [number, number, number],
                 rotation: [0, -3.6, -3.2] as [number, number, number],
                 color: '#2dfff3',
-                power: 18,
+                power: 5,
                 size: 2
             },
-            // Back rect area light (Blue accent)
-            // {
-            //     type: 'rectAreaLight',
-            //     position: [0, 1, -3] as [number, number, number],
-            //     color: '#6B9FFF',
-            //     power: 15,
-            //     size: 4
-            // },
+
         ]
     }, [])
 

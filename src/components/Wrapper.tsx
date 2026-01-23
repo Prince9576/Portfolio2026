@@ -10,11 +10,14 @@ const Wrapper = () => {
     return (
         <Canvas
             className='r3f'
-            shadows="soft"
+            shadows={{
+                enabled: true,
+                type: THREE.PCFSoftShadowMap,
+            }}
             gl={{
                 antialias: true,
                 toneMapping: THREE.ACESFilmicToneMapping,
-                toneMappingExposure: 0.6,
+                toneMappingExposure: 0.5,
                 outputColorSpace: THREE.SRGBColorSpace,
             }}
             camera={{
