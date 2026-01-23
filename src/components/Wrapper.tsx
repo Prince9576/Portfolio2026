@@ -14,6 +14,7 @@ const Wrapper = () => {
             gl={{
                 antialias: true,
                 toneMapping: THREE.ACESFilmicToneMapping,
+                toneMappingExposure: 0.6,
                 outputColorSpace: THREE.SRGBColorSpace,
             }}
             camera={{
@@ -26,7 +27,6 @@ const Wrapper = () => {
             dpr={[1, 2]}
             performance={{ min: 0.5 }}
         >
-            {/* <color attach="background" args={["#1a1a1a"]} /> */}
             <Suspense fallback={<></>}>
                 <LazyScene />
             </Suspense>
