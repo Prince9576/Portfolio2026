@@ -74,3 +74,4 @@ export default defineConfig([
 
 Credits :
 https://www.cgtrader.com/designers/hq3dmod?utm_source=credit&utm_source=credit_item_page
+https://www.cgtrader.com/designers/guy-in-a-poncho?utm_source=credit&utm_source=credit_item_page

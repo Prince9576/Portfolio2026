@@ -90,9 +90,9 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
                         width={size}
                         height={size}
                     />
-                    {showHelpers && lightRef.current && (
+                    {/* {showHelpers && lightRef.current && (
                         <primitive object={new RectAreaLightHelper(lightRef.current)} />
-                    )}
+                    )} */}
                 </group>
             );
         }
@@ -136,14 +136,14 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
                         shadow-normalBias={0.02}
                         shadow-radius={8}
                     />
-                    {showHelpers && lightRef.current && (
+                    {/* {showHelpers && lightRef.current && (
                         <>
                             <directionalLightHelper args={[lightRef.current, 2]} />
                             {lightRef.current.shadow && (
                                 <cameraHelper args={[lightRef.current.shadow.camera]} />
                             )}
                         </>
-                    )}
+                    )} */}
                 </>
             );
         }

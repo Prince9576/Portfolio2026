@@ -66,6 +66,13 @@ const Scene = () => {
                 power: 5,
                 size: 2
             },
+            {
+                type: 'directionalLight',
+                position: [-14, 2, 10] as [number, number, number],
+                color: '#2a3d6b',
+                intensity: 5,
+                castShadow: true
+            },
 
         ]
     }, [])
