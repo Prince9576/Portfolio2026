@@ -59,6 +59,7 @@ export default function Workspace() {
                     geometry={nodes.corona_beer_2.geometry}
                     material={materials.corona_berr_liquid}
                 />
+                <pointLight position-y={-0.01} intensity={0.05} color="rgb(0.6, 0.5, 1.0" />
             </group>
             <group position={[2.945, 0.433, 1.156]} scale={[0.459, 0.404, 0.459]}>
                 <mesh
