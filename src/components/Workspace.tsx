@@ -1,13 +1,36 @@
 
 import { useGLTF } from '@react-three/drei'
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import Light from './Light';
+import type { LightConfig } from './Light';
 
 export default function Workspace() {
     const { scene, nodes, materials } = useGLTF('/Models/gaming_raw6.glb') as any;
     const position = [-0.72, -2, 0] as [number, number, number];
     const rotation = [-0.35, -1.07, -0.04] as [number, number, number];
     const scale = 1.05;
+
+    const guitarRef = useRef<THREE.Mesh>(null);
+
+    useLayoutEffect(() => {
+        console.log("guitarRef.current", guitarRef.current);
+    }, [guitarRef.current]);
+
+    // Guitar Spotlight configuration - Floor uplight pointing at guitar
+    const guitarSpotlight: LightConfig[] = useMemo(() => [{
+        type: 'spotLight',
+        position: [-3.3, 0.1, -2.6] as [number, number, number], // On floor, near guitar
+        rotation: [Math.PI / 3, 0, 0] as [number, number, number], // ~60 degrees upward
+        intensity: 15,
+        color: '#c684ff',
+        angle: 0.5,
+        penumbra: 0.8,
+        distance: 8,
+        decay: 2,
+        castShadow: true,
+        targetRef: guitarRef
+    }], []);
 
     useEffect(() => {
         scene.traverse((child: any) => {
@@ -59,7 +82,7 @@ export default function Workspace() {
                     geometry={nodes.corona_beer_2.geometry}
                     material={materials.corona_berr_liquid}
                 />
-                <pointLight position-y={-0.01} intensity={0.05} color="rgb(0.6, 0.5, 1.0" />
+                {/* <pointLight position-y={-0.01} intensity={0.05} color="rgb(0.6, 0.5, 1.0" /> */}
             </group>
             <group position={[2.945, 0.433, 1.156]} scale={[0.459, 0.404, 0.459]}>
                 <mesh
@@ -362,15 +385,20 @@ export default function Workspace() {
                     material={materials.pesdvdpeq}
                 />
             </mesh>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Guitar.geometry}
-                material={materials.Guitar}
-                position={[-3.786, 1.824, -3.628]}
-                rotation={[2.866, -0.884, -1.712]}
-                scale={0.07}
-            />
+            <group>
+                <mesh
+                    ref={guitarRef}
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Guitar.geometry}
+                    material={materials.Guitar}
+                    position={[-3.786, 1.824, -3.628]}
+                    rotation={[2.866, -0.884, -1.712]}
+                    scale={0.07}
+                />
+                {/* Guitar Spotlight with helpers */}
+                <Light lights={guitarSpotlight} showHelpers={true} />
+            </group>
             <mesh
                 castShadow
                 receiveShadow

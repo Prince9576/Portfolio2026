@@ -1,20 +1,20 @@
 import { PresentationControls, Environment } from "@react-three/drei";
 import Workspace from "./Workspace";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 import { useMemo } from "react";
-import { useThree } from "@react-three/fiber";
+// import { useThree } from "@react-three/fiber";
 import Light from "./Light";
 
 const Scene = () => {
-    const { camera } = useThree();
+    // const { camera } = useThree();
 
-    // Debug toggle and controls
-    const { showHelpers } = useControls('Debug', {
-        showHelpers: {
-            value: false,
-            label: 'Show Helpers'
-        }
-    });
+    // Debug toggle and controls - not needed, spotlight has its own helpers
+    // const { showHelpers } = useControls('Debug', {
+    //     showHelpers: {
+    //         value: false,
+    //         label: 'Show Helpers'
+    //     }
+    // });
 
     const lights = useMemo(() => {
         return [
@@ -92,11 +92,11 @@ const Scene = () => {
             {/* Reduced environment for subtle reflections only */}
             <Environment preset="night" environmentIntensity={0.1} />
 
-            {/* Camera Helper */}
-            {showHelpers && <cameraHelper args={[camera]} />}
+            {/* Camera Helper - commented out to focus on spotlight */}
+            {/* {showHelpers && <cameraHelper args={[camera]} />} */}
 
-            {/* Lights */}
-            <Light lights={lights} showHelpers={showHelpers} />
+            {/* Lights - controls hidden to focus on Guitar Spotlight */}
+            <Light lights={lights} showHelpers={false} />
 
             <Workspace />
         </PresentationControls >

@@ -1,8 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useLayoutEffect } from "react";
 import { useControls } from "leva";
-import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
+// import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
-interface LightConfig {
+export interface LightConfig {
     type: string;
     position?: [number, number, number];
     rotation?: [number, number, number];
@@ -16,6 +16,11 @@ interface LightConfig {
     width?: number;
     height?: number;
     castShadow?: boolean;
+    angle?: number;
+    penumbra?: number;
+    distance?: number;
+    decay?: number;
+    targetRef?: any;
 }
 
 interface LightProps {
@@ -25,6 +30,12 @@ interface LightProps {
 
 const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; index: number; showHelpers: boolean }) => {
     const lightRef = useRef<any>(null);
+
+    useLayoutEffect(() => {
+        if (lightRef.current && light.targetRef && light.targetRef.current) {
+            lightRef.current.target = light.targetRef.current;
+        }
+    }, [light.targetRef, light.targetRef?.current]);
 
     switch (light.type) {
         case 'ambientLight': {
@@ -149,17 +160,22 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
         }
 
         case 'spotLight': {
-            const { position, intensity, color, angle } = useControls(`Spot Light ${index}`, {
+            const { position, rotation, intensity, color, angle, penumbra, distance, decay } = useControls(`Spot Light ${index}`, {
                 position: {
                     value: light.position || [0, 10, 0],
-                    step: 0.5,
+                    step: 0.1,
                     label: 'Position'
+                },
+                rotation: {
+                    value: light.rotation || [0, 0, 0],
+                    step: 0.1,
+                    label: 'Rotation'
                 },
                 intensity: {
                     value: light.intensity || 1,
                     min: 0,
-                    max: 5,
-                    step: 0.1,
+                    max: 2000,
+                    step: 10,
                     label: 'Intensity'
                 },
                 color: {
@@ -167,11 +183,32 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
                     label: 'Color'
                 },
                 angle: {
-                    value: 0.6,
+                    value: light.angle || 0.6,
                     min: 0,
                     max: Math.PI / 2,
-                    step: 0.1,
+                    step: 0.01,
                     label: 'Angle'
+                },
+                penumbra: {
+                    value: light.penumbra !== undefined ? light.penumbra : 1,
+                    min: 0,
+                    max: 1,
+                    step: 0.01,
+                    label: 'Penumbra'
+                },
+                distance: {
+                    value: light.distance || 0,
+                    min: 0,
+                    max: 50,
+                    step: 1,
+                    label: 'Distance'
+                },
+                decay: {
+                    value: light.decay !== undefined ? light.decay : 2,
+                    min: 0,
+                    max: 5,
+                    step: 0.1,
+                    label: 'Decay'
                 }
             }, { collapsed: !showHelpers });
 
@@ -180,14 +217,25 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
                     <spotLight
                         ref={lightRef}
                         position={position as [number, number, number]}
+                        rotation={rotation as [number, number, number]}
                         intensity={intensity}
                         color={color}
                         angle={angle}
-                        penumbra={1}
+                        penumbra={penumbra}
+                        distance={distance}
+                        decay={decay}
                         castShadow={light.castShadow}
+                        shadow-mapSize-width={1024}
+                        shadow-mapSize-height={1024}
+                        shadow-bias={-0.0005}
                     />
                     {showHelpers && lightRef.current && (
-                        <spotLightHelper args={[lightRef.current]} />
+                        <>
+                            <spotLightHelper args={[lightRef.current]} />
+                            {lightRef.current.shadow && (
+                                <cameraHelper args={[lightRef.current.shadow.camera]} />
+                            )}
+                        </>
                     )}
                 </>
             );
