@@ -1,7 +1,8 @@
 
 import { Html, useGLTF } from '@react-three/drei'
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useControls } from 'leva';
 import Light from './Light';
 import type { LightConfig } from './Light';
 import Projects from './Projects';
@@ -13,10 +14,42 @@ export default function Workspace() {
     const scale = 1.05;
 
     const guitarRef = useRef<THREE.Mesh>(null);
+    const tvScreenRef = useRef<THREE.Mesh>(null);
 
-    useLayoutEffect(() => {
-        console.log("guitarRef.current", guitarRef.current);
-    }, [guitarRef.current]);
+    // Fixed TV dimensions
+    const tvDimensions = { width: 980, height: 920 };
+
+    // HTML Position Controls
+    const { htmlX, htmlY, htmlZ, distanceFactor } = useControls('TV Screen HTML', {
+        htmlX: {
+            value: 0.05,
+            min: -2,
+            max: 2,
+            step: 0.001,
+            label: 'Position X'
+        },
+        htmlY: {
+            value: 0.04,
+            min: -2,
+            max: 2,
+            step: 0.001,
+            label: 'Position Y'
+        },
+        htmlZ: {
+            value: 0,
+            min: -2,
+            max: 2,
+            step: 0.001,
+            label: 'Position Z'
+        },
+        distanceFactor: {
+            value: 1,
+            min: 0.1,
+            max: 5,
+            step: 0.1,
+            label: 'Distance Factor'
+        }
+    });
 
     // Guitar Spotlight configuration - Floor uplight pointing at guitar
     const guitarSpotlight: LightConfig[] = useMemo(() => [{
@@ -138,27 +171,36 @@ export default function Workspace() {
                 scale={[1.967, 1.124, 1.124]}>
                 <mesh castShadow receiveShadow geometry={nodes.Plane006.geometry} material={materials.TV} />
                 <mesh
+                    ref={tvScreenRef}
                     castShadow
                     receiveShadow
                     geometry={nodes.Plane006_1.geometry}
                 >
-                    <meshBasicMaterial color="#000000" toneMapped={false} />
+                    <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
+                </mesh>
+                {/* HTML content positioned on the TV screen */}
+                <group position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
                     <Html
-                        position={[0, 0, 0.1]}
+                        position={[htmlX, htmlY, htmlZ]}
                         style={{
-                            color: 'white',
-                            width: '400px',
-                            height: '300px',
-                            background: 'rgba(0, 0, 0, 0.8)',
-                            padding: '20px'
+                            width: `${tvDimensions.width}px`,
+                            height: `${tvDimensions.height}px`,
+                            background: 'linear-gradient(135deg, rgba(20, 20, 30, 0.98), rgba(10, 10, 20, 0.98))',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            pointerEvents: 'auto',
+                            boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)',
                         }}
                         transform
-                        distanceFactor={1}
+                        distanceFactor={distanceFactor}
                         center
                     >
                         <Projects />
                     </Html>
-                </mesh>
+                </group>
                 <mesh
                     castShadow
                     receiveShadow
