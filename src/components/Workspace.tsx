@@ -2,7 +2,6 @@
 import { Html, useGLTF } from '@react-three/drei'
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useControls } from 'leva';
 import Light from './Light';
 import type { LightConfig } from './Light';
 import Projects from './Projects';
@@ -18,38 +17,6 @@ export default function Workspace() {
 
     // Fixed TV dimensions
     const tvDimensions = { width: 980, height: 920 };
-
-    // HTML Position Controls
-    const { htmlX, htmlY, htmlZ, distanceFactor } = useControls('TV Screen HTML', {
-        htmlX: {
-            value: 0.05,
-            min: -2,
-            max: 2,
-            step: 0.001,
-            label: 'Position X'
-        },
-        htmlY: {
-            value: 0.04,
-            min: -2,
-            max: 2,
-            step: 0.001,
-            label: 'Position Y'
-        },
-        htmlZ: {
-            value: 0,
-            min: -2,
-            max: 2,
-            step: 0.001,
-            label: 'Position Z'
-        },
-        distanceFactor: {
-            value: 1,
-            min: 0.1,
-            max: 5,
-            step: 0.1,
-            label: 'Distance Factor'
-        }
-    });
 
     // Guitar Spotlight configuration - Floor uplight pointing at guitar
     const guitarSpotlight: LightConfig[] = useMemo(() => [{
@@ -181,7 +148,7 @@ export default function Workspace() {
                 {/* HTML content positioned on the TV screen */}
                 <group position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
                     <Html
-                        position={[htmlX, htmlY, htmlZ]}
+                        position={[0.05, 0.04, 0]}
                         style={{
                             width: `${tvDimensions.width}px`,
                             height: `${tvDimensions.height}px`,
@@ -195,7 +162,7 @@ export default function Workspace() {
                             boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)',
                         }}
                         transform
-                        distanceFactor={distanceFactor}
+                        distanceFactor={1}
                         center
                     >
                         <Projects />
