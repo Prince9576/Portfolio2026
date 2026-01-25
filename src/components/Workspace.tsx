@@ -1,9 +1,10 @@
 
-import { useGLTF } from '@react-three/drei'
+import { Html, useGLTF } from '@react-three/drei'
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import type { LightConfig } from './Light';
+import Projects from './Projects';
 
 export default function Workspace() {
     const { scene, nodes, materials } = useGLTF('/Models/gaming_raw6.glb') as any;
@@ -140,8 +141,24 @@ export default function Workspace() {
                     castShadow
                     receiveShadow
                     geometry={nodes.Plane006_1.geometry}
-                    material={materials.TVDisplay}
-                />
+                >
+                    <meshBasicMaterial color="#000000" toneMapped={false} />
+                    <Html
+                        position={[0, 0, 0.1]}
+                        style={{
+                            color: 'white',
+                            width: '400px',
+                            height: '300px',
+                            background: 'rgba(0, 0, 0, 0.8)',
+                            padding: '20px'
+                        }}
+                        transform
+                        distanceFactor={1}
+                        center
+                    >
+                        <Projects />
+                    </Html>
+                </mesh>
                 <mesh
                     castShadow
                     receiveShadow
@@ -396,8 +413,8 @@ export default function Workspace() {
                     rotation={[2.866, -0.884, -1.712]}
                     scale={0.07}
                 />
-                {/* Guitar Spotlight with helpers */}
-                <Light lights={guitarSpotlight} showHelpers={true} />
+                {/* Guitar Spotlight - Only 2 lights with shadows now (main + guitar) */}
+                <Light lights={guitarSpotlight} showHelpers={false} />
             </group>
             <mesh
                 castShadow

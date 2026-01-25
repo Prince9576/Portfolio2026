@@ -42,7 +42,7 @@ const Scene = () => {
                 penumbra: 0.5,
                 distance: 20,
                 decay: 2,
-                castShadow: true
+                castShadow: false  // Disabled to save texture units
             },
             // Right rect area light (Blue)
             {
@@ -63,7 +63,7 @@ const Scene = () => {
                 penumbra: 0.5,
                 distance: 20,
                 decay: 2,
-                castShadow: true
+                castShadow: false  // Disabled to save texture units
             },
             // Top spotlight (Light Green/Cyan)
             {
