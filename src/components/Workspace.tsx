@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import type { LightConfig } from './Light';
-import Projects from './Projects';
+import TvScreenContent from './TvScreenContent';
 
 export default function Workspace() {
     const { scene, nodes, materials } = useGLTF('/Models/gaming_raw6.glb') as any;
@@ -16,7 +16,7 @@ export default function Workspace() {
     const tvScreenRef = useRef<THREE.Mesh>(null);
 
     // Fixed TV dimensions
-    const tvDimensions = { width: 980, height: 920 };
+    const tvDimensions = { width: 980, height: 960 };
 
     // Guitar Spotlight configuration - Floor uplight pointing at guitar
     const guitarSpotlight: LightConfig[] = useMemo(() => [{
@@ -148,7 +148,7 @@ export default function Workspace() {
                 {/* HTML content positioned on the TV screen */}
                 <group position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
                     <Html
-                        position={[0.05, 0.04, 0]}
+                        position={[0.05, 0.015, 0]}
                         style={{
                             width: `${tvDimensions.width}px`,
                             height: `${tvDimensions.height}px`,
@@ -165,7 +165,7 @@ export default function Workspace() {
                         distanceFactor={1}
                         center
                     >
-                        <Projects />
+                        <TvScreenContent />
                     </Html>
                 </group>
                 <mesh
