@@ -1,8 +1,7 @@
-import { PresentationControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei";
 import Workspace from "./Workspace";
 import { useMemo } from "react";
 import Light from "./Light";
-
 const Scene = () => {
 
     const lights = useMemo(() => {
@@ -83,13 +82,7 @@ const Scene = () => {
     }, [])
 
     return (
-        <PresentationControls
-            global
-            rotation={[0, 0, 0]}
-            polar={[-Math.PI / 3, Math.PI / 3]}
-            azimuth={[-Math.PI / 1.4, Math.PI / 2]}
-            snap
-        >
+        <>
             {/* Dark background like Blender */}
             <color attach="background" args={['#0a0f1e']} />
             <fog attach="fog" args={['#0a0f1e', 10, 30]} />
@@ -101,7 +94,16 @@ const Scene = () => {
             <Light lights={lights} showHelpers={false} />
 
             <Workspace />
-        </PresentationControls >
+
+            <OrbitControls
+                enableDamping
+                dampingFactor={0.08}
+                rotateSpeed={0.6}
+                maxPolarAngle={Math.PI / 2.1}
+                minDistance={4}
+                maxDistance={20}
+            />
+        </>
     )
 }
 

@@ -6,7 +6,6 @@ import { lazy, Suspense } from "react";
 
 const Wrapper = () => {
     const { colors } = useTheme();
-
     return (
         <Canvas
             className='r3f'
@@ -21,7 +20,7 @@ const Wrapper = () => {
                 outputColorSpace: THREE.SRGBColorSpace,
             }}
             camera={{
-                position: [0, 5, 10],
+                position: [0, 7.5, 10],
                 near: 0.1,
                 far: 10000,
                 fov: 50,
