@@ -1,5 +1,4 @@
 import { useRef, useEffect, useLayoutEffect } from "react";
-import { useControls } from "leva";
 // import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
 export interface LightConfig {
@@ -28,7 +27,7 @@ interface LightProps {
     showHelpers?: boolean;
 }
 
-const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; index: number; showHelpers: boolean }) => {
+const LightComponent = ({ light, showHelpers }: { light: LightConfig; showHelpers: boolean }) => {
     const lightRef = useRef<any>(null);
 
     useLayoutEffect(() => {
@@ -39,67 +38,26 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
 
     switch (light.type) {
         case 'ambientLight': {
-            const { intensity } = useControls(`Ambient Light ${index}`, {
-                intensity: {
-                    value: light.intensity || 0.25,
-                    min: 0,
-                    max: 5,
-                    step: 0.1,
-                    label: 'Intensity'
-                }
-            }, { collapsed: !showHelpers });
-
-            return <ambientLight intensity={intensity} />;
+            return <ambientLight intensity={light.intensity || 0.25} />;
         }
 
         case 'rectAreaLight': {
-            const { position, rotation, color, power, size } = useControls(`RectArea Light ${index}`, {
-                position: {
-                    value: light.position || [0, 0, 0],
-                    step: 0.5,
-                    label: 'Position'
-                },
-                rotation: {
-                    value: light.rotation || [0, 0, 0],
-                    step: 0.1,
-                    label: 'Rotation'
-                },
-                color: {
-                    value: light.color || '#ffffff',
-                    label: 'Color'
-                },
-                power: {
-                    value: light.power || 10,
-                    min: 0,
-                    max: 100,
-                    step: 1,
-                    label: 'Power'
-                },
-                size: {
-                    value: light.size || 4,
-                    min: 0.1,
-                    max: 20,
-                    step: 0.1,
-                    label: 'Size'
-                }
-            }, { collapsed: !showHelpers });
-
             // Make the light look at the center
             useEffect(() => {
                 if (lightRef.current) {
                     lightRef.current.lookAt(0, 0, 0);
                 }
-            }, [position]);
+            }, [light.position]);
 
             return (
-                <group position={position as [number, number, number]}>
+                <group position={light.position as [number, number, number]}>
                     <rectAreaLight
                         ref={lightRef}
-                        rotation={rotation as [number, number, number]}
-                        color={color}
-                        intensity={power}
-                        width={size}
-                        height={size}
+                        rotation={light.rotation as [number, number, number]}
+                        color={light.color || '#ffffff'}
+                        intensity={light.power || 10}
+                        width={light.size || 4}
+                        height={light.size || 4}
                     />
                     {/* {showHelpers && lightRef.current && (
                         <primitive object={new RectAreaLightHelper(lightRef.current)} />
@@ -109,32 +67,13 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
         }
 
         case 'directionalLight': {
-            const { position, intensity, color } = useControls(`Directional Light ${index}`, {
-                position: {
-                    value: light.position || [5, 5, 5],
-                    step: 0.5,
-                    label: 'Position'
-                },
-                intensity: {
-                    value: light.intensity || 1,
-                    min: 0,
-                    max: 5,
-                    step: 0.1,
-                    label: 'Intensity'
-                },
-                color: {
-                    value: light.color || '#ffffff',
-                    label: 'Color'
-                }
-            }, { collapsed: !showHelpers });
-
             return (
                 <>
                     <directionalLight
                         ref={lightRef}
-                        position={position as [number, number, number]}
-                        intensity={intensity}
-                        color={color}
+                        position={light.position as [number, number, number]}
+                        intensity={light.intensity || 1}
+                        color={light.color || '#ffffff'}
                         castShadow={light.castShadow}
                         shadow-mapSize={[2048, 2048]}
                         shadow-camera-near={0.1}
@@ -147,83 +86,31 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
                         shadow-normalBias={0.02}
                         shadow-radius={8}
                     />
-                    {/* {showHelpers && lightRef.current && (
+                    {showHelpers && lightRef.current && (
                         <>
                             <directionalLightHelper args={[lightRef.current, 2]} />
                             {lightRef.current.shadow && (
                                 <cameraHelper args={[lightRef.current.shadow.camera]} />
                             )}
                         </>
-                    )} */}
+                    )}
                 </>
             );
         }
 
         case 'spotLight': {
-            const { position, rotation, intensity, color, angle, penumbra, distance, decay } = useControls(`Spot Light ${index}`, {
-                position: {
-                    value: light.position || [0, 10, 0],
-                    step: 0.1,
-                    label: 'Position'
-                },
-                rotation: {
-                    value: light.rotation || [0, 0, 0],
-                    step: 0.1,
-                    label: 'Rotation'
-                },
-                intensity: {
-                    value: light.intensity || 1,
-                    min: 0,
-                    max: 2000,
-                    step: 10,
-                    label: 'Intensity'
-                },
-                color: {
-                    value: light.color || '#ffffff',
-                    label: 'Color'
-                },
-                angle: {
-                    value: light.angle || 0.6,
-                    min: 0,
-                    max: Math.PI / 2,
-                    step: 0.01,
-                    label: 'Angle'
-                },
-                penumbra: {
-                    value: light.penumbra !== undefined ? light.penumbra : 1,
-                    min: 0,
-                    max: 1,
-                    step: 0.01,
-                    label: 'Penumbra'
-                },
-                distance: {
-                    value: light.distance || 0,
-                    min: 0,
-                    max: 50,
-                    step: 1,
-                    label: 'Distance'
-                },
-                decay: {
-                    value: light.decay !== undefined ? light.decay : 2,
-                    min: 0,
-                    max: 5,
-                    step: 0.1,
-                    label: 'Decay'
-                }
-            }, { collapsed: !showHelpers });
-
             return (
                 <>
                     <spotLight
                         ref={lightRef}
-                        position={position as [number, number, number]}
-                        rotation={rotation as [number, number, number]}
-                        intensity={intensity}
-                        color={color}
-                        angle={angle}
-                        penumbra={penumbra}
-                        distance={distance}
-                        decay={decay}
+                        position={light.position as [number, number, number]}
+                        rotation={light.rotation as [number, number, number]}
+                        intensity={light.intensity || 1}
+                        color={light.color || '#ffffff'}
+                        angle={light.angle || 0.6}
+                        penumbra={light.penumbra !== undefined ? light.penumbra : 1}
+                        distance={light.distance || 0}
+                        decay={light.decay !== undefined ? light.decay : 2}
                         castShadow={light.castShadow}
                         shadow-mapSize-width={1024}
                         shadow-mapSize-height={1024}
@@ -242,40 +129,14 @@ const LightComponent = ({ light, index, showHelpers }: { light: LightConfig; ind
         }
 
         case 'pointLight': {
-            const { position, intensity, color, distance } = useControls(`Point Light ${index}`, {
-                position: {
-                    value: light.position || [0, 5, 0],
-                    step: 0.5,
-                    label: 'Position'
-                },
-                intensity: {
-                    value: light.intensity || 1,
-                    min: 0,
-                    max: 5,
-                    step: 0.1,
-                    label: 'Intensity'
-                },
-                color: {
-                    value: light.color || '#ffffff',
-                    label: 'Color'
-                },
-                distance: {
-                    value: 10,
-                    min: 0,
-                    max: 100,
-                    step: 1,
-                    label: 'Distance'
-                }
-            }, { collapsed: !showHelpers });
-
             return (
                 <>
                     <pointLight
                         ref={lightRef}
-                        position={position as [number, number, number]}
-                        intensity={intensity}
-                        color={color}
-                        distance={distance}
+                        position={light.position as [number, number, number]}
+                        intensity={light.intensity || 1}
+                        color={light.color || '#ffffff'}
+                        distance={light.distance || 10}
                         castShadow={light.castShadow}
                     />
                     {showHelpers && lightRef.current && (
@@ -298,7 +159,6 @@ const Light = ({ lights, showHelpers = false }: LightProps) => {
                 <LightComponent
                     key={`${light.type}-${index}`}
                     light={light}
-                    index={index}
                     showHelpers={showHelpers}
                 />
             ))}
