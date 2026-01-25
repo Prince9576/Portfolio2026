@@ -32,12 +32,16 @@ const Scene = () => {
                 power: 20,
                 size: 3
             },
-            // Left subtle fill light (no shadows for performance)
+            // Left spotlight (Purple)
             {
-                type: 'directionalLight',
+                type: 'spotLight',
                 position: [-6.5, 2, 6.5] as [number, number, number],
                 color: '#3d2860',
-                intensity: 1,
+                intensity: 100,
+                angle: 0.6,
+                penumbra: 0.5,
+                distance: 20,
+                decay: 2,
                 castShadow: true
             },
             // Right rect area light (Blue)
@@ -49,28 +53,40 @@ const Scene = () => {
                 power: 25,
                 size: 3
             },
-            // Right subtle fill light (no shadows for performance)
+            // Right spotlight (Blue)
             {
-                type: 'directionalLight',
+                type: 'spotLight',
                 position: [4, 2, 10] as [number, number, number],
                 color: '#2a3d6b',
-                intensity: 1,
+                intensity: 100,
+                angle: 0.6,
+                penumbra: 0.5,
+                distance: 20,
+                decay: 2,
                 castShadow: true
             },
-            // Top rect area light (White/Blue)
+            // Top spotlight (Light Green/Cyan)
             {
-                type: 'rectAreaLight',
-                position: [-0.5, 2.5, -1.5] as [number, number, number],
-                rotation: [0, -3.6, -3.2] as [number, number, number],
-                color: '#2dfff3',
-                power: 5,
-                size: 2
+                type: 'spotLight',
+                position: [0.4, 2.5, -3.8] as [number, number, number],
+                color: '#2ed8ff',
+                intensity: 50,
+                angle: 0.5,
+                penumbra: 0.5,
+                distance: 15,
+                decay: 2,
+                castShadow: true
             },
+            // Additional spotlight (Blue)
             {
-                type: 'directionalLight',
+                type: 'spotLight',
                 position: [-14, 2, 10] as [number, number, number],
                 color: '#2a3d6b',
-                intensity: 5,
+                intensity: 500,
+                angle: 0.6,
+                penumbra: 0.5,
+                distance: 30,
+                decay: 2,
                 castShadow: true
             },
 
