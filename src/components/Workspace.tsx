@@ -1,10 +1,207 @@
 
-import { Html, useGLTF } from '@react-three/drei'
-import { useEffect, useMemo, useRef } from 'react';
+import { Html, useGLTF, Bounds } from '@react-three/drei'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import gsap from 'gsap';
 import Light from './Light';
 import type { LightConfig } from './Light';
 import TvScreenContent from './TvScreenContent';
+
+function TvGroup({ nodes, materials, tvDimensions }: any) {
+    const { camera } = useThree();
+    const [isZoomed, setIsZoomed] = useState(false);
+    const tvScreenRef = useRef<THREE.Mesh>(null);
+    const tvGroupRef = useRef<THREE.Group>(null);
+    const originalCameraState = useRef({
+        position: new THREE.Vector3(),
+        rotation: new THREE.Euler(),
+    });
+
+    // Store original camera state on mount
+    useEffect(() => {
+        originalCameraState.current = {
+            position: camera.position.clone(),
+            rotation: camera.rotation.clone(),
+        };
+    }, [camera]);
+
+    const returnBackToOriginal = useCallback(() => {
+        const original = originalCameraState.current;
+        gsap.to(camera.position, {
+            x: original.position.x,
+            y: original.position.y,
+            z: original.position.z,
+            duration: 1,
+            ease: 'power2.out',
+        });
+        gsap.to(camera.rotation, {
+            x: original.rotation.x,
+            y: original.rotation.y,
+            z: original.rotation.z,
+            duration: 1,
+            ease: 'power2.out',
+        });
+        setTimeout(() => {
+            setIsZoomed(false);
+        }, 1050);
+    }, [camera]);
+
+    const handleTvClick = useCallback((event?: any) => {
+        if (isZoomed) return;
+
+        if (event) {
+            event.stopPropagation();
+        }
+
+        if (!tvScreenRef.current || !tvGroupRef.current) return;
+
+        const screenWorldPos = new THREE.Vector3();
+        const screenWorldQuat = new THREE.Quaternion();
+        const screenUp = new THREE.Vector3();
+        const screenNormal = new THREE.Vector3();
+
+        tvScreenRef.current.getWorldPosition(screenWorldPos);
+        tvGroupRef.current.getWorldQuaternion(screenWorldQuat);
+        screenUp.set(0, 1, 0).applyQuaternion(screenWorldQuat).normalize();
+        screenNormal.set(0, 0, 1).applyQuaternion(screenWorldQuat).normalize();
+
+        const screenBox = new THREE.Box3().setFromObject(tvScreenRef.current);
+        const screenSize = new THREE.Vector3();
+        screenBox.getSize(screenSize);
+
+        const fov = THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov);
+        const fillRatio = 1.25;
+        const distance = (screenSize.y * 0.5) / Math.tan(fov * 0.5) / fillRatio;
+
+        const targetPos = screenWorldPos.clone().add(screenNormal.multiplyScalar(distance));
+
+        camera.up.set(0, 1, 0);
+        const lookAtMatrix = new THREE.Matrix4().lookAt(targetPos, screenWorldPos, screenUp);
+        const targetQuat = new THREE.Quaternion().setFromRotationMatrix(lookAtMatrix);
+
+        gsap.to(camera.position, {
+            x: targetPos.x,
+            y: targetPos.y,
+            z: targetPos.z,
+            duration: 1.1,
+            ease: 'power2.inOut',
+        });
+        gsap.to(camera.quaternion, {
+            x: targetQuat.x,
+            y: targetQuat.y,
+            z: targetQuat.z,
+            w: targetQuat.w,
+            duration: 1.1,
+            ease: 'power2.inOut',
+        });
+
+        setTimeout(() => {
+            setIsZoomed(true);
+        }, 1050);
+    }, [isZoomed, camera]);
+
+    // Handle ESC key press
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isZoomed) {
+                returnBackToOriginal();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isZoomed, returnBackToOriginal]);
+
+    return (
+        <>
+            <group
+                ref={tvGroupRef}
+                position={[-0.28, 3.631, -3.878]}
+                rotation={[Math.PI / 2, 0, 0]}
+                scale={[1.967, 1.124, 1.124]}
+                onClick={handleTvClick}
+            >
+                <mesh castShadow receiveShadow geometry={nodes.Plane006.geometry} material={materials.TV} />
+                <mesh
+                    ref={tvScreenRef}
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Plane006_1.geometry}
+                >
+                    <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
+                </mesh>
+                {/* HTML content positioned on the TV screen */}
+                <group position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
+                    <Html
+                        position={[0.05, 0.015, 0]}
+                        style={{
+                            width: `${tvDimensions.width}px`,
+                            height: `${tvDimensions.height}px`,
+                            background: 'linear-gradient(135deg, rgba(20, 20, 30, 0.98), rgba(10, 10, 20, 0.98))',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            pointerEvents: 'auto',
+                            boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)',
+                        }}
+                        transform
+                        distanceFactor={1}
+                        center
+                    >
+                        <TvScreenContent onScreenClick={handleTvClick} />
+                    </Html>
+                </group>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Plane006_2.geometry}
+                    material={materials.TVBacklight}
+                />
+            </group>
+
+            {/* ESC Button UI - Only show when zoomed */}
+            {isZoomed && (
+                <Html
+                    position={[-4, 5, -3]}
+                    style={{
+                        pointerEvents: 'auto',
+                    }}
+                    transform={false}
+                    zIndexRange={[100, 0]}
+                >
+                    <button
+                        onClick={returnBackToOriginal}
+                        style={{
+                            backgroundColor: 'transparent',
+                            border: '2px solid white',
+                            color: 'white',
+                            padding: '8px 16px',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontFamily: 'monospace',
+                            transition: 'all 0.2s ease',
+                            backdropFilter: 'blur(4px)',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                    >
+                        ESC
+                    </button>
+                </Html>
+            )}
+        </>
+    );
+}
 
 export default function Workspace() {
     const { scene, nodes, materials } = useGLTF('/Models/gaming_raw6.glb') as any;
@@ -13,7 +210,6 @@ export default function Workspace() {
     const scale = 1.05;
 
     const guitarRef = useRef<THREE.Mesh>(null);
-    const tvScreenRef = useRef<THREE.Mesh>(null);
 
     // Fixed TV dimensions
     const tvDimensions = { width: 980, height: 960 };
@@ -132,49 +328,9 @@ export default function Workspace() {
                 material={materials.Metal}
                 position={[0.029, 0.2, 2.418]}
             />
-            <group
-                position={[-0.28, 3.631, -3.878]}
-                rotation={[Math.PI / 2, 0, 0]}
-                scale={[1.967, 1.124, 1.124]}>
-                <mesh castShadow receiveShadow geometry={nodes.Plane006.geometry} material={materials.TV} />
-                <mesh
-                    ref={tvScreenRef}
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane006_1.geometry}
-                >
-                    <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
-                </mesh>
-                {/* HTML content positioned on the TV screen */}
-                <group position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
-                    <Html
-                        position={[0.05, 0.015, 0]}
-                        style={{
-                            width: `${tvDimensions.width}px`,
-                            height: `${tvDimensions.height}px`,
-                            background: 'linear-gradient(135deg, rgba(20, 20, 30, 0.98), rgba(10, 10, 20, 0.98))',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: '8px',
-                            pointerEvents: 'auto',
-                            boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)',
-                        }}
-                        transform
-                        distanceFactor={1}
-                        center
-                    >
-                        <TvScreenContent />
-                    </Html>
-                </group>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane006_2.geometry}
-                    material={materials.TVBacklight}
-                />
-            </group>
+            <Bounds clip observe margin={1.2}>
+                <TvGroup nodes={nodes} materials={materials} tvDimensions={tvDimensions} />
+            </Bounds>
             <mesh
                 castShadow
                 receiveShadow

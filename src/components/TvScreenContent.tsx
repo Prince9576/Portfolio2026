@@ -1,7 +1,11 @@
 import { Download, Info } from 'lucide-react';
 import { useRef } from 'react';
 
-const TvScreenContent = () => {
+interface TvScreenContentProps {
+    onScreenClick?: () => void;
+}
+
+const TvScreenContent = ({ onScreenClick }: TvScreenContentProps) => {
     const scrollContainerRef1 = useRef<HTMLDivElement>(null);
     const scrollContainerRef2 = useRef<HTMLDivElement>(null);
 
@@ -26,15 +30,19 @@ const TvScreenContent = () => {
     ];
 
     return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#141414',
-            color: '#fff',
-            fontFamily: 'Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif',
-            overflow: 'hidden',
-            position: 'relative'
-        }}>
+        <div
+            onClick={onScreenClick}
+            style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#141414',
+                color: '#fff',
+                fontFamily: 'Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif',
+                overflow: 'hidden',
+                position: 'relative',
+                cursor: 'pointer'
+            }}
+        >
             {/* Netflix Logo */}
             <div style={{
                 position: 'absolute',
