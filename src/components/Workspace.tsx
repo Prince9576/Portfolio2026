@@ -624,7 +624,7 @@ export default function Workspace() {
                     position={[-9.674, 271.904, -13.492]}
                 />
             </mesh>
-            <mesh
+            {/* <mesh
                 castShadow
                 receiveShadow
                 geometry={nodes.Phone.geometry}
@@ -759,7 +759,7 @@ export default function Workspace() {
                     geometry={nodes.Extrude_2.geometry}
                     material={materials['Phone Cover']}
                 />
-            </mesh>
+            </mesh> */}
             <mesh
                 castShadow
                 receiveShadow

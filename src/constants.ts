@@ -8,4 +8,11 @@ const screenHeight = Math.round(screenWidth * (TV_SCREEN_SIZE_UNITS.height / TV_
 const SCREEN_SCALE = TV_SCREEN_SIZE_UNITS.width / screenWidth; // 0.00148
 
 
-export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT };
+const LAPTOP_CAMERA_VIEW = {
+    position: { x: 0.15, y: 0.35, z: 0.32 },
+    target: { x: 3.66, y: -4.96, z: -7.59 },
+    rotation: { x: 0, y: 0, z: 0, w: 1 }
+}
+
+
+export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT, LAPTOP_CAMERA_VIEW };

@@ -2,6 +2,7 @@ import { OrbitControls, Environment } from "@react-three/drei";
 import Workspace from "./Workspace";
 import { useMemo } from "react";
 import Light from "./Light";
+
 const Scene = () => {
 
     const lights = useMemo(() => {
@@ -96,6 +97,7 @@ const Scene = () => {
             <Workspace />
 
             <OrbitControls
+                makeDefault
                 enableDamping
                 dampingFactor={0.08}
                 rotateSpeed={0.6}
