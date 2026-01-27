@@ -916,7 +916,7 @@ export default function Workspace() {
                     material={materials['Drawer Holder']}
                 />
                 <Laptop
-                    position={[0.20, -0.12, -0.44]}
+                    position={[0.20, -0.12, -0.42]}
                     rotation={[-1.51, 1.11, -0.05]}
                     scale={0.05}
                 />

@@ -28,8 +28,8 @@ function Laptop(props: any) {
             </group>
             <mesh material={materials.keys} geometry={nodes.keyboard.geometry} position={[1.79, 0, 3.45]} />
             <group position={[0, -0.1, 3.39]}>
-                <mesh material={materials.aluminium} geometry={nodes['Cube002'].geometry} />
-                <mesh material={materials.trackpad} geometry={nodes['Cube002_1'].geometry} />
+                <mesh castShadow receiveShadow material={materials.aluminium} geometry={nodes['Cube002'].geometry} />
+                <mesh castShadow receiveShadow material={materials.trackpad} geometry={nodes['Cube002_1'].geometry} />
             </group>
             <mesh material={materials.touchbar} geometry={nodes.touchbar.geometry} position={[0, -0.03, 1.2]} />
         </group>
