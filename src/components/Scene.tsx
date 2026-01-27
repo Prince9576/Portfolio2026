@@ -102,6 +102,8 @@ const Scene = () => {
                 maxPolarAngle={Math.PI / 2.1}
                 minDistance={4}
                 maxDistance={20}
+                enableZoom={false}
+                enablePan={false}
             />
         </>
     )

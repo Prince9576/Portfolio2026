@@ -1,12 +1,12 @@
 
-import { useGLTF } from '@react-three/drei'
-import { useEffect, useRef } from 'react';
+import { Html, useGLTF } from '@react-three/drei'
+import { useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
-import { SCREEN_SCALE, SCREEN_WIDTH, SCREEN_HEIGHT } from '../constants';
-import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
-import { useThree } from '@react-three/fiber';
+import TvScreenContent from './TvScreenContent';
+import Laptop from './Laptop';
+import { useControls } from 'leva';
 
 
 export default function Workspace() {
@@ -22,123 +22,122 @@ export default function Workspace() {
     const tvScreenRef = useRef<THREE.Mesh>(null);
     /* Hooks */
     const guitarSpotlight = useGuitarSpotlight(guitarRef);
-    const { camera } = useThree();
 
-    useEffect(() => {
-        if (!tvScreenRef.current) return;
+    // useEffect(() => {
+    //     if (!tvScreenRef.current) return;
 
-        // ========== CREATE CSS3D RENDERER & SCENE ==========
-        const css3DScene = new THREE.Scene();
-        const css3DRenderer = new CSS3DRenderer();
-        css3DRenderer.setSize(window.innerWidth, window.innerHeight);
-        css3DRenderer.domElement.style.position = 'absolute';
-        css3DRenderer.domElement.style.top = '0';
-        css3DRenderer.domElement.style.left = '0';
-        css3DRenderer.domElement.style.pointerEvents = 'none';
-        css3DRenderer.domElement.style.zIndex = '1';
-        document.body.appendChild(css3DRenderer.domElement);
+    //     // ========== CREATE CSS3D RENDERER & SCENE ==========
+    //     const css3DScene = new THREE.Scene();
+    //     const css3DRenderer = new CSS3DRenderer();
+    //     css3DRenderer.setSize(window.innerWidth, window.innerHeight);
+    //     css3DRenderer.domElement.style.position = 'absolute';
+    //     css3DRenderer.domElement.style.top = '0';
+    //     css3DRenderer.domElement.style.left = '0';
+    //     css3DRenderer.domElement.style.pointerEvents = 'none';
+    //     css3DRenderer.domElement.style.zIndex = '1';
+    //     document.body.appendChild(css3DRenderer.domElement);
 
-        // Render loop for CSS3D
-        let animationFrameId: number;
-        const animate = () => {
-            css3DRenderer.render(css3DScene, camera);
-            animationFrameId = requestAnimationFrame(animate);
-        };
-        animate();
+    //     // Render loop for CSS3D
+    //     let animationFrameId: number;
+    //     const animate = () => {
+    //         css3DRenderer.render(css3DScene, camera);
+    //         animationFrameId = requestAnimationFrame(animate);
+    //     };
+    //     animate();
 
-        const geometry = tvScreenRef.current.geometry as THREE.BufferGeometry;
-        if (!geometry.boundingBox) {
-            geometry.computeBoundingBox();
-        }
+    //     const geometry = tvScreenRef.current.geometry as THREE.BufferGeometry;
+    //     if (!geometry.boundingBox) {
+    //         geometry.computeBoundingBox();
+    //     }
 
-        const localSize = new THREE.Vector3();
-        const localCenter = new THREE.Vector3();
-        geometry.boundingBox?.getSize(localSize);
-        geometry.boundingBox?.getCenter(localCenter);
+    //     const localSize = new THREE.Vector3();
+    //     const localCenter = new THREE.Vector3();
+    //     geometry.boundingBox?.getSize(localSize);
+    //     geometry.boundingBox?.getCenter(localCenter);
 
-        // ========== GET WORLD COORDINATES ==========
-        const worldPosition = new THREE.Vector3();
-        tvScreenRef.current.getWorldPosition(worldPosition);
+    //     // ========== GET WORLD COORDINATES ==========
+    //     const worldPosition = new THREE.Vector3();
+    //     tvScreenRef.current.getWorldPosition(worldPosition);
 
-        const worldQuaternion = new THREE.Quaternion();
-        tvScreenRef.current.getWorldQuaternion(worldQuaternion);
+    //     const worldQuaternion = new THREE.Quaternion();
+    //     tvScreenRef.current.getWorldQuaternion(worldQuaternion);
 
-        const worldRotation = new THREE.Euler();
-        worldRotation.setFromQuaternion(worldQuaternion, 'XYZ');
+    //     const worldRotation = new THREE.Euler();
+    //     worldRotation.setFromQuaternion(worldQuaternion, 'XYZ');
 
-        // ========== CALCULATE CSS3D ROTATION ==========
-        // testMesh works with -Math.PI/2 as child
-        // CSS3D needs same compensation applied to worldRotation
-        const compensationQuat = new THREE.Quaternion();
-        compensationQuat.setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
+    //     // ========== CALCULATE CSS3D ROTATION ==========
+    //     // testMesh works with -Math.PI/2 as child
+    //     // CSS3D needs same compensation applied to worldRotation
+    //     const compensationQuat = new THREE.Quaternion();
+    //     compensationQuat.setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
 
-        const css3DQuaternion = worldQuaternion.clone().multiply(compensationQuat);
-        const css3DRotation = new THREE.Euler();
-        css3DRotation.setFromQuaternion(css3DQuaternion, 'XYZ');
+    //     const css3DQuaternion = worldQuaternion.clone().multiply(compensationQuat);
+    //     const css3DRotation = new THREE.Euler();
+    //     css3DRotation.setFromQuaternion(css3DQuaternion, 'XYZ');
 
-        console.log('TV Screen Setup:', { worldPosition, worldRotation, css3DRotation });
+    //     console.log('TV Screen Setup:', { worldPosition, worldRotation, css3DRotation });
 
-        // ========== CREATE IFRAME + CSS3D OBJECT ==========
-        const container = document.createElement("div");
-        container.style.width = SCREEN_WIDTH + "px";
-        container.style.height = SCREEN_HEIGHT + "px";
+    //     // ========== CREATE IFRAME + CSS3D OBJECT ==========
+    //     const container = document.createElement("div");
+    //     container.style.width = SCREEN_WIDTH + "px";
+    //     container.style.height = SCREEN_HEIGHT + "px";
 
-        const iframe = document.createElement("iframe");
-        iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1';
-        iframe.style.width = SCREEN_WIDTH + "px";
-        iframe.style.height = SCREEN_HEIGHT + "px";
-        iframe.style.border = "none";
-        iframe.id = "tv-screen";
-        iframe.style.boxSizing = "border-box";
-        iframe.style.background = "#1a1a1f";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        container.appendChild(iframe);
+    //     const iframe = document.createElement("iframe");
+    //     iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1';
+    //     iframe.style.width = SCREEN_WIDTH + "px";
+    //     iframe.style.height = SCREEN_HEIGHT + "px";
+    //     iframe.style.border = "none";
+    //     iframe.id = "tv-screen";
+    //     iframe.style.boxSizing = "border-box";
+    //     iframe.style.background = "#1a1a1f";
+    //     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    //     container.appendChild(iframe);
 
-        const css3dobject = new CSS3DObject(container);
+    //     const css3dobject = new CSS3DObject(container);
 
-        // Position and rotate to match TV screen
-        css3dobject.position.copy(worldPosition);
-        css3dobject.rotation.copy(css3DRotation);  // Use compensated rotation
-        css3dobject.scale.setScalar(SCREEN_SCALE);
+    //     // Position and rotate to match TV screen
+    //     css3dobject.position.copy(worldPosition);
+    //     css3dobject.rotation.copy(css3DRotation);  // Use compensated rotation
+    //     css3dobject.scale.setScalar(SCREEN_SCALE);
 
-        css3DScene.add(css3dobject);
+    //     css3DScene.add(css3dobject);
 
-        // ========== CREATE TRANSPARENT MESH FOR RAYCASTING ==========
-        const planeGeometry = new THREE.PlaneGeometry(localSize.x, localSize.z);
-        const material = new THREE.MeshBasicMaterial({
-            color: 'black',
-            opacity: 0,
-            transparent: true,
-            side: THREE.DoubleSide,
-        });
-        const transparentMesh = new THREE.Mesh(planeGeometry, material);
+    //     // ========== CREATE TRANSPARENT MESH FOR RAYCASTING ==========
+    //     const planeGeometry = new THREE.PlaneGeometry(localSize.x, localSize.z);
+    //     const material = new THREE.MeshBasicMaterial({
+    //         color: 'black',
+    //         opacity: 0,
+    //         transparent: true,
+    //         side: THREE.DoubleSide,
+    //     });
+    //     const transparentMesh = new THREE.Mesh(planeGeometry, material);
 
-        transparentMesh.position.copy(localCenter);
-        transparentMesh.rotation.set(-Math.PI / 2, 0, 0);  // Same rotation as working testMesh
-        transparentMesh.position.z += 0.001;
-        transparentMesh.name = "tvScreenHitbox";
+    //     transparentMesh.position.copy(localCenter);
+    //     transparentMesh.rotation.set(-Math.PI / 2, 0, 0);  // Same rotation as working testMesh
+    //     transparentMesh.position.z += 0.001;
+    //     transparentMesh.name = "tvScreenHitbox";
 
-        tvScreenRef.current.add(transparentMesh);
+    //     tvScreenRef.current.add(transparentMesh);
 
-        // ========== CLEANUP ==========
-        return () => {
-            // Cancel animation frame
-            cancelAnimationFrame(animationFrameId);
+    //     // ========== CLEANUP ==========
+    //     return () => {
+    //         // Cancel animation frame
+    //         cancelAnimationFrame(animationFrameId);
 
-            // Remove CSS3D renderer from DOM
-            if (css3DRenderer.domElement.parentNode) {
-                css3DRenderer.domElement.parentNode.removeChild(css3DRenderer.domElement);
-            }
+    //         // Remove CSS3D renderer from DOM
+    //         if (css3DRenderer.domElement.parentNode) {
+    //             css3DRenderer.domElement.parentNode.removeChild(css3DRenderer.domElement);
+    //         }
 
-            // Remove transparent mesh
-            if (tvScreenRef.current) {
-                tvScreenRef.current.remove(transparentMesh);
-            }
+    //         // Remove transparent mesh
+    //         if (tvScreenRef.current) {
+    //             tvScreenRef.current.remove(transparentMesh);
+    //         }
 
-            planeGeometry.dispose();
-            material.dispose();
-        };
-    }, [camera])
+    //         planeGeometry.dispose();
+    //         material.dispose();
+    //     };
+    // }, [camera])
 
 
     return (
@@ -243,6 +242,17 @@ export default function Workspace() {
                     geometry={nodes.Plane006_1.geometry}
                 >
                     <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
+                    {/* <Html
+                        className='tv-content-outer-container'
+                        transform
+                        rotation={[-Math.PI / 2, 0, 0]}
+                        scale={0.5}
+                        position={[0, 0, 0.001]}
+                    >
+
+                        <TvScreenContent />
+
+                    </Html> */}
                 </mesh>
                 <mesh
                     castShadow
@@ -904,6 +914,11 @@ export default function Workspace() {
                     receiveShadow
                     geometry={nodes.Center_Table_2.geometry}
                     material={materials['Drawer Holder']}
+                />
+                <Laptop
+                    position={[0.20, -0.12, -0.44]}
+                    rotation={[-1.51, 1.11, -0.05]}
+                    scale={0.05}
                 />
             </group>
             <mesh
