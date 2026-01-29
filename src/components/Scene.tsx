@@ -1,9 +1,12 @@
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
 import Workspace from "./Workspace";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import Light from "./Light";
+import useFrustumCulling from "../hooks/useFrustumCulling";
 
-const Scene = () => {
+const Scene = memo(() => {
+    // Enable frustum culling for performance
+    useFrustumCulling();
 
     const lights = useMemo(() => {
         return [
@@ -76,7 +79,7 @@ const Scene = () => {
                 penumbra: 0.5,
                 distance: 30,
                 decay: 2,
-                castShadow: true
+                castShadow: false
             },
 
         ]
@@ -96,6 +99,9 @@ const Scene = () => {
 
             <Workspace />
 
+            {/* Bake shadows after scene loads for better performance */}
+            <BakeShadows />
+
             <OrbitControls
                 makeDefault
                 enableDamping
@@ -109,6 +115,8 @@ const Scene = () => {
             />
         </>
     )
-}
+});
+
+Scene.displayName = 'Scene';
 
 export default Scene;

@@ -1,7 +1,128 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Briefcase, Code, Trophy, Zap, Star, Target, Award, TrendingUp } from 'lucide-react';
 
-const WorkEx = () => {
+// Extract static styles
+const CONTAINER_STYLE: React.CSSProperties = {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#0a0a0a',
+    color: '#ffffff',
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    position: 'relative',
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#4F46E5 #1a1a1a'
+};
+
+const BACKGROUND_GRADIENT_STYLE: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.1) 0%, transparent 50%)',
+    pointerEvents: 'none'
+};
+
+const PARTICLES_CONTAINER_STYLE: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'hidden',
+    pointerEvents: 'none',
+    opacity: 0.3
+};
+
+const PARTICLE_BASE_STYLE: React.CSSProperties = {
+    position: 'absolute',
+    width: '2px',
+    height: '2px',
+    backgroundColor: '#4F46E5',
+    borderRadius: '50%',
+    transition: 'transform 0.1s ease-out'
+};
+
+const HEADER_SECTION_STYLE: React.CSSProperties = {
+    padding: '60px 40px 40px',
+    textAlign: 'center',
+    position: 'relative'
+};
+
+const HEADER_FLEX_STYLE: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '15px',
+    marginBottom: '20px'
+};
+
+const TITLE_STYLE: React.CSSProperties = {
+    fontSize: '48px',
+    fontWeight: 700,
+    margin: 0,
+    background: 'linear-gradient(135deg, #4F46E5 0%, #10B981 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+};
+
+const SUBTITLE_STYLE: React.CSSProperties = {
+    fontSize: '18px',
+    color: '#a0a0a0',
+    maxWidth: '600px',
+    margin: '0 auto 30px',
+    lineHeight: 1.6
+};
+
+const XP_BAR_CONTAINER_STYLE: React.CSSProperties = {
+    maxWidth: '500px',
+    margin: '0 auto',
+    backgroundColor: '#1a1a1a',
+    borderRadius: '20px',
+    padding: '15px 20px',
+    border: '2px solid #2a2a2a'
+};
+
+const XP_BAR_PROGRESS_CONTAINER_STYLE: React.CSSProperties = {
+    width: '100%',
+    height: '12px',
+    backgroundColor: '#2a2a2a',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    position: 'relative'
+};
+
+const TIMELINE_CONTAINER_STYLE: React.CSSProperties = {
+    position: 'relative',
+    padding: '40px 40px 80px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    boxSizing: 'border-box'
+};
+
+const TIMELINE_LINE_STYLE: React.CSSProperties = {
+    position: 'absolute',
+    left: '60px',
+    top: '40px',
+    bottom: '80px',
+    width: '3px',
+    background: 'linear-gradient(180deg, #4F46E5 0%, #10B981 100%)',
+    boxShadow: '0 0 20px rgba(79, 70, 229, 0.5)',
+    zIndex: 1
+};
+
+const CARD_STYLE: React.CSSProperties = {
+    backgroundColor: '#1a1a1a',
+    borderRadius: '16px',
+    padding: '30px',
+    position: 'relative',
+    overflow: 'hidden'
+};
+
+const WorkEx = memo(() => {
     const [scrollY, setScrollY] = useState(0);
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
     const [collectedSkills, setCollectedSkills] = useState<Set<string>>(new Set());
@@ -32,7 +153,7 @@ const WorkEx = () => {
         };
     }, []);
 
-    const experiences = [
+    const experiences = useMemo(() => [
         {
             id: 1,
             company: 'Pratishthan Software Ventures Pvt Ltd.',
@@ -73,13 +194,13 @@ const WorkEx = () => {
             ],
             skills: ['React', 'Next.js', 'TypeScript', 'GraphQL', 'Three.js', 'D3.js']
         }
-    ];
+    ], []);
 
-    const allSkills = experiences.flatMap(exp => exp.skills);
-    const uniqueSkills = [...new Set(allSkills)];
-    const totalXP = uniqueSkills.length * 100; // 100 XP per unique skill
+    const allSkills = useMemo(() => experiences.flatMap(exp => exp.skills), [experiences]);
+    const uniqueSkills = useMemo(() => [...new Set(allSkills)], [allSkills]);
+    const totalXP = useMemo(() => uniqueSkills.length * 100, [uniqueSkills]);
 
-    const handleSkillClick = (skill: string) => {
+    const handleSkillClick = useCallback((skill: string) => {
         if (!collectedSkills.has(skill)) {
             setCollectedSkills(new Set([...collectedSkills, skill]));
             setXpPoints(prev => Math.min(prev + 100, totalXP));
@@ -98,62 +219,36 @@ const WorkEx = () => {
                 setAnimatingSkill(null);
             }, 1000);
         }
-    };
+    }, [collectedSkills, totalXP]);
+
+    const handleCardMouseEnter = useCallback((id: number) => {
+        setHoveredCard(id);
+    }, []);
+
+    const handleCardMouseLeave = useCallback(() => {
+        setHoveredCard(null);
+    }, []);
 
     const progressPercentage = (xpPoints / totalXP) * 100;
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#0a0a0a',
-                color: '#ffffff',
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                position: 'relative',
-                scrollbarWidth: 'thin',
-                scrollbarColor: '#4F46E5 #1a1a1a'
-            }}
-        >
+        <div ref={containerRef} style={CONTAINER_STYLE}>
             {/* Animated Background */}
             <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.1) 0%, transparent 50%)',
-                transform: `translateY(${scrollY * 0.3}px)`,
-                pointerEvents: 'none'
+                ...BACKGROUND_GRADIENT_STYLE,
+                transform: `translateY(${scrollY * 0.3}px)`
             }} />
 
             {/* Floating Particles */}
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                overflow: 'hidden',
-                pointerEvents: 'none',
-                opacity: 0.3
-            }}>
+            <div style={PARTICLES_CONTAINER_STYLE}>
                 {[...Array(20)].map((_, i) => (
                     <div
                         key={i}
                         style={{
-                            position: 'absolute',
-                            width: '2px',
-                            height: '2px',
-                            backgroundColor: '#4F46E5',
-                            borderRadius: '50%',
+                            ...PARTICLE_BASE_STYLE,
                             left: `${(i * 5) % 100}%`,
                             top: `${(i * 7) % 100}%`,
-                            transform: `translateY(${scrollY * (0.1 + i * 0.01)}px)`,
-                            transition: 'transform 0.1s ease-out'
+                            transform: `translateY(${scrollY * (0.1 + i * 0.01)}px)`
                         }}
                     />
                 ))}
@@ -161,51 +256,20 @@ const WorkEx = () => {
 
             {/* Header Section */}
             <div style={{
-                padding: '60px 40px 40px',
-                textAlign: 'center',
-                position: 'relative',
-                transform: `translateY(${scrollY * -0.5}px)`,
+                ...HEADER_SECTION_STYLE,
+                transform: `translateY(${scrollY * -0.5}px)`
             }}>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '15px',
-                    marginBottom: '20px'
-                }}>
+                <div style={HEADER_FLEX_STYLE}>
                     <Briefcase size={40} color="#4F46E5" />
-                    <h1 style={{
-                        fontSize: '48px',
-                        fontWeight: 700,
-                        margin: 0,
-                        background: 'linear-gradient(135deg, #4F46E5 0%, #10B981 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
-                    }}>
-                        Career Journey
-                    </h1>
+                    <h1 style={TITLE_STYLE}>Career Journey</h1>
                 </div>
 
-                <p style={{
-                    fontSize: '18px',
-                    color: '#a0a0a0',
-                    maxWidth: '600px',
-                    margin: '0 auto 30px',
-                    lineHeight: 1.6
-                }}>
+                <p style={SUBTITLE_STYLE}>
                     6 years of crafting exceptional digital experiences. Collect skills along the way!
                 </p>
 
                 {/* XP Bar */}
-                <div style={{
-                    maxWidth: '500px',
-                    margin: '0 auto',
-                    backgroundColor: '#1a1a1a',
-                    borderRadius: '20px',
-                    padding: '15px 20px',
-                    border: '2px solid #2a2a2a'
-                }}>
+                <div style={XP_BAR_CONTAINER_STYLE}>
                     <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -220,14 +284,7 @@ const WorkEx = () => {
                             {xpPoints} / {totalXP}
                         </span>
                     </div>
-                    <div style={{
-                        width: '100%',
-                        height: '12px',
-                        backgroundColor: '#2a2a2a',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        position: 'relative'
-                    }}>
+                    <div style={XP_BAR_PROGRESS_CONTAINER_STYLE}>
                         <div style={{
                             width: `${progressPercentage}%`,
                             height: '100%',
@@ -249,28 +306,13 @@ const WorkEx = () => {
             </div>
 
             {/* Timeline Container */}
-            <div style={{
-                position: 'relative',
-                padding: '40px 40px 80px',
-                maxWidth: '1200px',
-                margin: '0 auto',
-                boxSizing: 'border-box'
-            }}>
+            <div style={TIMELINE_CONTAINER_STYLE}>
                 {/* Vertical Timeline Line - Left Aligned */}
-                <div style={{
-                    position: 'absolute',
-                    left: '60px',
-                    top: '40px',
-                    bottom: '80px',
-                    width: '3px',
-                    background: 'linear-gradient(180deg, #4F46E5 0%, #10B981 100%)',
-                    boxShadow: '0 0 20px rgba(79, 70, 229, 0.5)',
-                    zIndex: 1
-                }} />
+                <div style={TIMELINE_LINE_STYLE} />
 
                 {/* Timeline Nodes - Fixed on the line */}
                 {experiences.map((exp, index) => {
-                    const nodeTopPosition = 40 + (index * 650) + 50; // 40px padding + spacing between cards + offset
+                    const nodeTopPosition = 40 + (index * 650) + 50;
 
                     return (
                         <div
@@ -309,24 +351,19 @@ const WorkEx = () => {
                                 transition: 'transform 0.3s ease-out'
                             }}
                         >
-
                             {/* Card */}
                             <div
-                                onMouseEnter={() => setHoveredCard(exp.id)}
-                                onMouseLeave={() => setHoveredCard(null)}
+                                onMouseEnter={() => handleCardMouseEnter(exp.id)}
+                                onMouseLeave={handleCardMouseLeave}
                                 style={{
-                                    backgroundColor: '#1a1a1a',
-                                    borderRadius: '16px',
-                                    padding: '30px',
+                                    ...CARD_STYLE,
                                     border: `2px solid ${isHovered ? exp.color : '#2a2a2a'}`,
                                     transform: `scale(${isHovered ? 1.02 : 1}) translateY(${isHovered ? -5 : 0}px)`,
                                     transition: 'all 0.3s ease',
                                     cursor: 'pointer',
                                     boxShadow: isHovered
                                         ? `0 20px 40px rgba(0,0,0,0.5), 0 0 30px ${exp.color}40`
-                                        : '0 10px 30px rgba(0,0,0,0.3)',
-                                    position: 'relative',
-                                    overflow: 'hidden'
+                                        : '0 10px 30px rgba(0,0,0,0.3)'
                                 }}
                             >
                                 {/* Gradient Overlay */}
@@ -469,55 +506,14 @@ const WorkEx = () => {
                                         {exp.skills.map((skill, i) => {
                                             const isCollected = collectedSkills.has(skill);
                                             return (
-                                                <button
+                                                <SkillButton
                                                     key={i}
-                                                    onClick={() => handleSkillClick(skill)}
-                                                    style={{
-                                                        padding: '8px 16px',
-                                                        backgroundColor: isCollected ? exp.color : '#2a2a2a',
-                                                        color: isCollected ? '#fff' : '#a0a0a0',
-                                                        border: `2px solid ${isCollected ? exp.color : '#3a3a3a'}`,
-                                                        borderRadius: '20px',
-                                                        fontSize: '13px',
-                                                        fontWeight: 600,
-                                                        cursor: isCollected ? 'default' : 'pointer',
-                                                        transition: 'all 0.3s ease',
-                                                        transform: isCollected ? 'scale(1.05)' : 'scale(1)',
-                                                        boxShadow: isCollected ? `0 0 15px ${exp.color}60` : 'none',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: '6px'
-                                                    }}
-                                                    onMouseEnter={(e) => {
-                                                        if (!isCollected) {
-                                                            e.currentTarget.style.backgroundColor = '#3a3a3a';
-                                                            e.currentTarget.style.transform = 'scale(1.05)';
-                                                        }
-                                                    }}
-                                                    onMouseLeave={(e) => {
-                                                        if (!isCollected) {
-                                                            e.currentTarget.style.backgroundColor = '#2a2a2a';
-                                                            e.currentTarget.style.transform = 'scale(1)';
-                                                        }
-                                                    }}
-                                                >
-                                                    <div style={{ position: 'relative' }}>
-                                                        <Star size={14} fill={isCollected ? "currentColor" : "none"} />
-                                                        {animatingSkill === skill && (
-                                                            <Star
-                                                                size={14}
-                                                                fill="currentColor"
-                                                                style={{
-                                                                    position: 'absolute',
-                                                                    top: 0,
-                                                                    left: 0,
-                                                                    animation: 'starFloat 1s ease-out forwards'
-                                                                }}
-                                                            />
-                                                        )}
-                                                    </div>
-                                                    {skill}
-                                                </button>
+                                                    skill={skill}
+                                                    isCollected={isCollected}
+                                                    expColor={exp.color}
+                                                    animatingSkill={animatingSkill}
+                                                    onClick={handleSkillClick}
+                                                />
                                             );
                                         })}
                                     </div>
@@ -583,48 +579,10 @@ const WorkEx = () => {
                         { icon: Code, label: 'Technologies', value: uniqueSkills.length, color: '#F59E0B' },
                         { icon: Trophy, label: 'Total XP', value: totalXP, color: '#EF4444' }
                     ].map((stat, i) => (
-                        <div
-                            key={i}
-                            style={{
-                                backgroundColor: '#1a1a1a',
-                                borderRadius: '12px',
-                                padding: '20px 30px',
-                                border: '2px solid #2a2a2a',
-                                minWidth: '150px',
-                                transition: 'all 0.3s ease',
-                                cursor: 'default'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = stat.color;
-                                e.currentTarget.style.transform = 'translateY(-5px)';
-                                e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}40`;
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.borderColor = '#2a2a2a';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = 'none';
-                            }}
-                        >
-                            <stat.icon size={28} color={stat.color} style={{ marginBottom: '10px' }} />
-                            <div style={{
-                                fontSize: '28px',
-                                fontWeight: 700,
-                                color: stat.color,
-                                marginBottom: '5px'
-                            }}>
-                                {stat.value}
-                            </div>
-                            <div style={{
-                                fontSize: '14px',
-                                color: '#a0a0a0'
-                            }}>
-                                {stat.label}
-                            </div>
-                        </div>
+                        <StatCard key={i} stat={stat} />
                     ))}
                 </div>
             </div>
-
 
             {/* Animations */}
             <style>{`
@@ -666,6 +624,128 @@ const WorkEx = () => {
             `}</style>
         </div>
     );
-};
+});
+
+WorkEx.displayName = 'WorkEx';
+
+// Extracted sub-components for better performance
+const SkillButton = memo(({
+    skill,
+    isCollected,
+    expColor,
+    animatingSkill,
+    onClick
+}: {
+    skill: string;
+    isCollected: boolean;
+    expColor: string;
+    animatingSkill: string | null;
+    onClick: (skill: string) => void;
+}) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleClick = useCallback(() => {
+        onClick(skill);
+    }, [onClick, skill]);
+
+    const handleMouseEnter = useCallback(() => {
+        if (!isCollected) setIsHovered(true);
+    }, [isCollected]);
+
+    const handleMouseLeave = useCallback(() => {
+        setIsHovered(false);
+    }, []);
+
+    return (
+        <button
+            onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                padding: '8px 16px',
+                backgroundColor: isCollected ? expColor : (isHovered ? '#3a3a3a' : '#2a2a2a'),
+                color: isCollected ? '#fff' : '#a0a0a0',
+                border: `2px solid ${isCollected ? expColor : '#3a3a3a'}`,
+                borderRadius: '20px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: isCollected ? 'default' : 'pointer',
+                transition: 'all 0.3s ease',
+                transform: isCollected || isHovered ? 'scale(1.05)' : 'scale(1)',
+                boxShadow: isCollected ? `0 0 15px ${expColor}60` : 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+            }}
+        >
+            <div style={{ position: 'relative' }}>
+                <Star size={14} fill={isCollected ? "currentColor" : "none"} />
+                {animatingSkill === skill && (
+                    <Star
+                        size={14}
+                        fill="currentColor"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            animation: 'starFloat 1s ease-out forwards'
+                        }}
+                    />
+                )}
+            </div>
+            {skill}
+        </button>
+    );
+});
+
+SkillButton.displayName = 'SkillButton';
+
+const StatCard = memo(({ stat }: { stat: any }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = useCallback(() => {
+        setIsHovered(true);
+    }, []);
+
+    const handleMouseLeave = useCallback(() => {
+        setIsHovered(false);
+    }, []);
+
+    return (
+        <div
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                backgroundColor: '#1a1a1a',
+                borderRadius: '12px',
+                padding: '20px 30px',
+                border: `2px solid ${isHovered ? stat.color : '#2a2a2a'}`,
+                minWidth: '150px',
+                transition: 'all 0.3s ease',
+                cursor: 'default',
+                transform: isHovered ? 'translateY(-5px)' : 'translateY(0)',
+                boxShadow: isHovered ? `0 10px 30px ${stat.color}40` : 'none'
+            }}
+        >
+            <stat.icon size={28} color={stat.color} style={{ marginBottom: '10px' }} />
+            <div style={{
+                fontSize: '28px',
+                fontWeight: 700,
+                color: stat.color,
+                marginBottom: '5px'
+            }}>
+                {stat.value}
+            </div>
+            <div style={{
+                fontSize: '14px',
+                color: '#a0a0a0'
+            }}>
+                {stat.label}
+            </div>
+        </div>
+    );
+});
+
+StatCard.displayName = 'StatCard';
 
 export default WorkEx;

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useLayoutEffect } from "react";
+import { memo, useRef, useEffect, useLayoutEffect } from "react";
 // import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
 export interface LightConfig {
@@ -27,7 +27,7 @@ interface LightProps {
     showHelpers?: boolean;
 }
 
-const LightComponent = ({ light, showHelpers }: { light: LightConfig; showHelpers: boolean }) => {
+const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showHelpers: boolean }) => {
     const lightRef = useRef<any>(null);
 
     useLayoutEffect(() => {
@@ -112,8 +112,8 @@ const LightComponent = ({ light, showHelpers }: { light: LightConfig; showHelper
                         distance={light.distance || 0}
                         decay={light.decay !== undefined ? light.decay : 2}
                         castShadow={light.castShadow}
-                        shadow-mapSize-width={1024}
-                        shadow-mapSize-height={1024}
+                        shadow-mapSize-width={512}
+                        shadow-mapSize-height={512}
                         shadow-bias={-0.0005}
                     />
                     {showHelpers && lightRef.current && (
@@ -150,9 +150,11 @@ const LightComponent = ({ light, showHelpers }: { light: LightConfig; showHelper
             console.warn(`Unknown light type: ${light.type}`);
             return null;
     }
-};
+});
 
-const Light = ({ lights, showHelpers = false }: LightProps) => {
+LightComponent.displayName = 'LightComponent';
+
+const Light = memo(({ lights, showHelpers = false }: LightProps) => {
     return (
         <>
             {lights.map((light, index) => (
@@ -164,6 +166,8 @@ const Light = ({ lights, showHelpers = false }: LightProps) => {
             ))}
         </>
     );
-};
+});
+
+Light.displayName = 'Light';
 
 export default Light;

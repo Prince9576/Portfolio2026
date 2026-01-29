@@ -1,23 +1,25 @@
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { Canvas } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { lazy, Suspense, useRef } from "react";
-import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
+// import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
+import { Perf } from "r3f-perf";
 
 // Component to render CSS3D on each frame
-function CSS3DRenderer({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
-    const { css3DScene, css3DRenderer } = useCSS3DRenderer(containerRef);
-    const { camera } = useThree();
+// Commented out since CSS3D is not currently being used
+// function CSS3DRenderer({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
+//     const { css3DScene, css3DRenderer } = useCSS3DRenderer(containerRef);
+//     const { camera } = useThree();
 
-    useFrame(() => {
-        if (css3DRenderer && css3DScene && camera) {
-            css3DRenderer.render(css3DScene, camera);
-        }
-    });
+//     useFrame(() => {
+//         if (css3DRenderer && css3DScene && camera) {
+//             css3DRenderer.render(css3DScene, camera);
+//         }
+//     });
 
-    return null;
-}
+//     return null;
+// }
 
 
 
@@ -66,7 +68,8 @@ const Wrapper = () => {
                 <Suspense fallback={<></>}>
                     <LazyScene />
                 </Suspense>
-                <CSS3DRenderer containerRef={css3DContainerRef} />
+                {/* <CSS3DRenderer containerRef={css3DContainerRef} /> */}
+                <Perf position="top-left" />
                 <EffectComposer autoClear={false} multisampling={0}>
                     <Bloom
                         intensity={0.1}

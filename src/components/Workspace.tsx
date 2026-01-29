@@ -1,16 +1,16 @@
 
 import { useGLTF } from '@react-three/drei'
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
 import Laptop from './Laptop';
 
 
-export default function Workspace() {
+const Workspace = memo(() => {
 
     /* Base */
-    const { nodes, materials } = useGLTF('/Models/gaming_raw6.glb') as any;
+    const { nodes, materials } = useGLTF('/Models/gaming_raw6.glb', true) as any;
     const position = [-0.72, -2, 0] as [number, number, number];
     const rotation = [-0.35, -1.07, -0.04] as [number, number, number];
     const scale = 1.05;
@@ -863,7 +863,10 @@ export default function Workspace() {
             </group>
         </group>
     )
-}
+});
 
-useGLTF.preload('/Models/wrokspace.glb')
+Workspace.displayName = 'Workspace';
 
+useGLTF.preload('/Models/gaming_raw6.glb');
+
+export default Workspace;
