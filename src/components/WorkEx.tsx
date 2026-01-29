@@ -1,19 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Briefcase, Code, Trophy, Zap, Star, Target, Award, TrendingUp } from 'lucide-react';
 
-interface FloatingStar {
-    id: number;
-    x: number;
-    y: number;
-}
-
 const WorkEx = () => {
     const [scrollY, setScrollY] = useState(0);
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
     const [collectedSkills, setCollectedSkills] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);
     const [xpPoints, setXpPoints] = useState(0);
-    const [floatingStars, setFloatingStars] = useState<FloatingStar[]>([]);
+    const [animatingSkill, setAnimatingSkill] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -85,7 +79,7 @@ const WorkEx = () => {
     const uniqueSkills = [...new Set(allSkills)];
     const totalXP = uniqueSkills.length * 100; // 100 XP per unique skill
 
-    const handleSkillClick = (skill: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSkillClick = (skill: string) => {
         if (!collectedSkills.has(skill)) {
             setCollectedSkills(new Set([...collectedSkills, skill]));
             setXpPoints(prev => Math.min(prev + 100, totalXP));
@@ -96,26 +90,13 @@ const WorkEx = () => {
                 audioRef.current.play().catch(err => console.log('Audio play failed:', err));
             }
 
-            // Create floating star animation - duplicate the star in the button
-            const rect = event.currentTarget.getBoundingClientRect();
-            const containerRect = containerRef.current?.getBoundingClientRect();
+            // Trigger animation on the absolute positioned star
+            setAnimatingSkill(skill);
 
-            if (containerRect) {
-                const starId = Date.now();
-                const newStar: FloatingStar = {
-                    id: starId,
-                    // Position at the star location (left padding + icon offset)
-                    x: rect.left - containerRect.left + 24,
-                    y: rect.top - containerRect.top + rect.height / 2 + (containerRef.current?.scrollTop || 0)
-                };
-
-                setFloatingStars(prev => [...prev, newStar]);
-
-                // Remove star after animation completes (1s)
-                setTimeout(() => {
-                    setFloatingStars(prev => prev.filter(star => star.id !== starId));
-                }, 1000);
-            }
+            // Remove animation after it completes (1s)
+            setTimeout(() => {
+                setAnimatingSkill(null);
+            }, 1000);
         }
     };
 
@@ -490,7 +471,7 @@ const WorkEx = () => {
                                             return (
                                                 <button
                                                     key={i}
-                                                    onClick={(e) => handleSkillClick(skill, e)}
+                                                    onClick={() => handleSkillClick(skill)}
                                                     style={{
                                                         padding: '8px 16px',
                                                         backgroundColor: isCollected ? exp.color : '#2a2a2a',
@@ -520,7 +501,21 @@ const WorkEx = () => {
                                                         }
                                                     }}
                                                 >
-                                                    <Star size={14} fill={isCollected ? "currentColor" : "none"} />
+                                                    <div style={{ position: 'relative' }}>
+                                                        <Star size={14} fill={isCollected ? "currentColor" : "none"} />
+                                                        {animatingSkill === skill && (
+                                                            <Star
+                                                                size={14}
+                                                                fill="currentColor"
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    top: 0,
+                                                                    left: 0,
+                                                                    animation: 'starFloat 1s ease-out forwards'
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </div>
                                                     {skill}
                                                 </button>
                                             );
@@ -630,33 +625,6 @@ const WorkEx = () => {
                 </div>
             </div>
 
-            {/* Floating Stars */}
-            {floatingStars.map(star => (
-                <div
-                    key={star.id}
-                    style={{
-                        position: 'absolute',
-                        left: `${star.x}px`,
-                        top: `${star.y}px`,
-                        pointerEvents: 'none',
-                        zIndex: 9999
-                    }}
-                >
-                    <div style={{
-                        animation: 'coinFloat 1s ease-out forwards',
-                        transformOrigin: 'center center',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <Star
-                            size={14}
-                            fill="#FCD34D"
-                            color="#FCD34D"
-                        />
-                    </div>
-                </div>
-            ))}
 
             {/* Animations */}
             <style>{`
@@ -671,7 +639,7 @@ const WorkEx = () => {
                     }
                 }
 
-                @keyframes coinFloat {
+                @keyframes starFloat {
                     0% {
                         transform: translateY(0) rotate(0deg);
                         opacity: 1;

@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import * as THREE from 'three';
-import TvScreenContent from "./TvScreenContent";
 import useNavigation from "../hooks/useNavigation";
 import { LAPTOP_CAMERA_VIEW } from "../constants";
 import WorkEx from "./WorkEx";
