@@ -1,10 +1,9 @@
 import { Canvas } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { lazy, Suspense, useRef } from "react";
-// import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
 import { Perf } from "r3f-perf";
+// import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
 
 // Component to render CSS3D on each frame
 // Commented out since CSS3D is not currently being used
@@ -65,19 +64,10 @@ const Wrapper = () => {
                 dpr={[1, 2]}
                 performance={{ min: 0.5 }}
             >
+                <Perf style={{ zIndex: 100000000 }} position="top-left" />
                 <Suspense fallback={<></>}>
                     <LazyScene />
                 </Suspense>
-                {/* <CSS3DRenderer containerRef={css3DContainerRef} /> */}
-                <Perf position="top-left" />
-                <EffectComposer autoClear={false} multisampling={0}>
-                    <Bloom
-                        intensity={0.1}
-                        luminanceThreshold={0.85}
-                        luminanceSmoothing={0.1}
-                    />
-
-                </EffectComposer>
             </Canvas>
         </div>
     )

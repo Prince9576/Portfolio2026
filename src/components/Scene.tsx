@@ -4,6 +4,7 @@ import { memo } from "react";
 import Light from "./Light";
 import useFrustumCulling from "../hooks/useFrustumCulling";
 import useSceneLights from "../hooks/useSceneLights";
+import PostProcess from "./PostProcess";
 
 const Scene = memo(() => {
     // Enable frustum culling for performance
@@ -12,7 +13,7 @@ const Scene = memo(() => {
     const lights = useSceneLights();
 
     return (
-        <>
+        <PostProcess>
             {/* Dark background like Blender */}
             <color attach="background" args={['#0a0f1e']} />
             <fog attach="fog" args={['#0a0f1e', 10, 30]} />
@@ -39,7 +40,7 @@ const Scene = memo(() => {
                 enableZoom={false}
                 enablePan={false}
             />
-        </>
+        </PostProcess>
     )
 });
 

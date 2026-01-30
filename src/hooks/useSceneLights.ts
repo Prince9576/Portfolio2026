@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import type { LightConfig } from "../components/Light";
 
 /**
  * Custom hook for main scene lighting

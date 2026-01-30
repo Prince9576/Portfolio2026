@@ -1,5 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Briefcase, Code, Trophy, Zap, Star, Target, Award, TrendingUp } from 'lucide-react';
+import useAudioManager from '../hooks/useAudioManager';
+import { AudioType } from '../hooks/useAudioManager';
 
 // Extract static styles
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -129,7 +131,11 @@ const WorkEx = memo(() => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [xpPoints, setXpPoints] = useState(0);
     const [animatingSkill, setAnimatingSkill] = useState<string | null>(null);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const { play, cleanup } = useAudioManager(AudioType.XP);
+
+    useEffect(() => {
+        return cleanup;
+    }, []);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -141,15 +147,8 @@ const WorkEx = memo(() => {
 
         container.addEventListener('scroll', handleScroll);
 
-        // Initialize audio
-        audioRef.current = new Audio('/sounds/xp.mp3');
-        audioRef.current.volume = 0.5;
-
         return () => {
             container.removeEventListener('scroll', handleScroll);
-            if (audioRef.current) {
-                audioRef.current = null;
-            }
         };
     }, []);
 
@@ -206,10 +205,7 @@ const WorkEx = memo(() => {
             setXpPoints(prev => Math.min(prev + 100, totalXP));
 
             // Play sound effect
-            if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current.play().catch(err => console.log('Audio play failed:', err));
-            }
+            play();
 
             // Trigger animation on the absolute positioned star
             setAnimatingSkill(skill);
