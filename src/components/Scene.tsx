@@ -1,5 +1,5 @@
 import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
-import Workspace from "./Workspace";
+import Workspace from "./Room.tsx";
 import { memo } from "react";
 import React from "react";
 import Light from "./Light";
