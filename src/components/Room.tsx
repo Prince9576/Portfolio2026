@@ -6,6 +6,7 @@ import Light from './Light';
 import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
 import Laptop from './Laptop';
 import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
+import Shelf from './Shelf';
 
 
 const Main = memo(() => {
@@ -818,6 +819,7 @@ const Main = memo(() => {
                     scale={[3.063 - 0.32, 3.533 - 0.32, 3.533 - 0.32]}
                 />
             </group>
+            <Shelf scale={0.75} position={[-3.9, 1.568, 1.25]} />
 
             <group position={[-4, 4.968, 3.5]}
             >

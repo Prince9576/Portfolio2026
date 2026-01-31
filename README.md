@@ -75,3 +75,5 @@ export default defineConfig([
 Credits :
 https://www.cgtrader.com/designers/hq3dmod?utm_source=credit&utm_source=credit_item_page
 https://www.cgtrader.com/designers/guy-in-a-poncho?utm_source=credit&utm_source=credit_item_page
+Bike : "Kawasaki ninja ZX-6R" (https://skfb.ly/oVZ8s) by valvetin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+Naruto : "Naruto Shippuden- Naruto" (https://skfb.ly/ot8At) by 3D Resource is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
