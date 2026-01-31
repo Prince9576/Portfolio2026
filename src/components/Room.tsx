@@ -4,6 +4,7 @@ import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
+import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Laptop from './Laptop';
 
 
@@ -18,8 +19,10 @@ const Workspace = memo(() => {
     /* Refs */
     const guitarRef = useRef<THREE.Mesh>(null);
     const tvScreenRef = useRef<THREE.Mesh>(null);
+    const wallFrameRef = useRef<THREE.Mesh>(null);
     /* Hooks */
     const guitarSpotlight = useGuitarSpotlight(guitarRef);
+    const wallFrameSpotlight = useWallFrameSpotlight(wallFrameRef);
 
 
     return (
@@ -803,15 +806,18 @@ const Workspace = memo(() => {
                     scale={0.05}
                 />
             </group>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Wall_Frame.geometry}
-                material={materials['Wall Frame']}
-                position={[-4, 3.468, -0.763]}
-                rotation={[1.571, 0, -Math.PI / 2]}
-                scale={[3.063, 3.533, 3.533]}
-            />
+            <group position={[-4, 3.468, -1.363]}
+                rotation={[1.571, 0, -Math.PI / 2]}>
+                <Light lights={wallFrameSpotlight} />
+                <mesh
+                    ref={wallFrameRef}
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Wall_Frame.geometry}
+                    material={materials['Wall Frame']}
+                    scale={[3.063 - 0.27, 3.533 - 0.27, 3.533 - 0.27]}
+                />
+            </group>
             <group position={[-0.091, 1.397, -0.37]} rotation={[-0.258, 0.254, 0.066]} scale={0.502}>
                 <mesh
                     castShadow

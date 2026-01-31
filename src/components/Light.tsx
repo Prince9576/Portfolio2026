@@ -36,6 +36,29 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
         }
     }, [light.targetRef, light.targetRef?.current]);
 
+    // Also check periodically in case the ref becomes available later
+    useEffect(() => {
+        if (!light.targetRef) return;
+
+        const checkTarget = () => {
+            if (lightRef.current && light.targetRef?.current) {
+                lightRef.current.target = light.targetRef.current;
+            }
+        };
+
+        // Check immediately
+        checkTarget();
+
+        // Check again after delays to catch late-mounted refs
+        const timeouts = [
+            setTimeout(checkTarget, 50),
+            setTimeout(checkTarget, 100),
+            setTimeout(checkTarget, 200)
+        ];
+
+        return () => timeouts.forEach(clearTimeout);
+    }, [light.targetRef]);
+
     switch (light.type) {
         case 'ambientLight': {
             return <ambientLight intensity={light.intensity || 0.25} />;
@@ -100,31 +123,21 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
 
         case 'spotLight': {
             return (
-                <>
-                    <spotLight
-                        ref={lightRef}
-                        position={light.position as [number, number, number]}
-                        rotation={light.rotation as [number, number, number]}
-                        intensity={light.intensity || 1}
-                        color={light.color || '#ffffff'}
-                        angle={light.angle || 0.6}
-                        penumbra={light.penumbra !== undefined ? light.penumbra : 1}
-                        distance={light.distance || 0}
-                        decay={light.decay !== undefined ? light.decay : 2}
-                        castShadow={light.castShadow}
-                        shadow-mapSize-width={512}
-                        shadow-mapSize-height={512}
-                        shadow-bias={-0.0005}
-                    />
-                    {showHelpers && lightRef.current && (
-                        <>
-                            <spotLightHelper args={[lightRef.current]} />
-                            {lightRef.current.shadow && (
-                                <cameraHelper args={[lightRef.current.shadow.camera]} />
-                            )}
-                        </>
-                    )}
-                </>
+                <spotLight
+                    ref={lightRef}
+                    position={light.position as [number, number, number]}
+                    rotation={light.rotation as [number, number, number]}
+                    intensity={light.intensity || 1}
+                    color={light.color || '#ffffff'}
+                    angle={light.angle || 0.6}
+                    penumbra={light.penumbra !== undefined ? light.penumbra : 1}
+                    distance={light.distance || 0}
+                    decay={light.decay !== undefined ? light.decay : 2}
+                    castShadow={light.castShadow}
+                    shadow-mapSize-width={512}
+                    shadow-mapSize-height={512}
+                    shadow-bias={-0.0005}
+                />
             );
         }
 
