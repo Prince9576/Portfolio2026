@@ -1,5 +1,5 @@
 
-import { useGLTF } from '@react-three/drei'
+import { Text3D, useGLTF } from '@react-three/drei'
 import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
@@ -806,7 +806,7 @@ const Main = memo(() => {
                     scale={0.05}
                 />
             </group>
-            <group position={[-4, 3.468, -1.363]}
+            <group position={[-4, 3.668, -1.763]}
                 rotation={[1.571, 0, -Math.PI / 2]}>
                 <Light lights={wallFrameSpotlight} />
                 <mesh
@@ -815,9 +815,55 @@ const Main = memo(() => {
                     receiveShadow
                     geometry={nodes.Wall_Frame.geometry}
                     material={materials['Wall Frame']}
-                    scale={[3.063 - 0.27, 3.533 - 0.27, 3.533 - 0.27]}
+                    scale={[3.063 - 0.32, 3.533 - 0.32, 3.533 - 0.32]}
                 />
             </group>
+
+            <group position={[-4, 4.968, 3.5]}
+            >
+                <Text3D
+                    font="/fonts/neon.typeface.json"
+                    size={0.35}
+                    height={0.05}          // thickness (IMPORTANT)
+                    curveSegments={12}
+                    bevelEnabled
+                    bevelThickness={0.01}
+                    bevelSize={0.005}
+                    bevelSegments={5}
+                    rotation={[0, Math.PI / 2, 0]}
+                >
+                    Prince.Kr
+                    <meshStandardMaterial
+                        color="#e6c7ff"
+                        emissive="#b76cff"
+                        emissiveIntensity={2.2}
+                        toneMapped={false}
+                    />
+                </Text3D>
+
+                <Text3D
+                    font="/fonts/spark.typeface.json"
+                    size={0.2}
+                    height={0.01}          // thickness (IMPORTANT)
+                    curveSegments={6}
+                    bevelEnabled
+                    bevelThickness={0.01}
+                    bevelSize={0.005}
+                    bevelSegments={5}
+                    position-y={-0.45}
+                    position-z={-0.2}
+                    rotation={[0, Math.PI / 2, 0]}
+                >
+                    SDE III | Frontend
+                    <meshStandardMaterial
+                        color="#dbe3ff"
+                        emissive="#7f9cff"
+                        emissiveIntensity={1.25}
+                        toneMapped={false}
+                    />
+                </Text3D>
+            </group>
+
             <group position={[-0.091, 1.397, -0.37]} rotation={[-0.258, 0.254, 0.066]} scale={0.502}>
                 <mesh
                     castShadow

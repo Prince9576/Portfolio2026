@@ -1,4 +1,4 @@
-import { EffectComposer, Outline, Selection } from "@react-three/postprocessing"
+import { Bloom, EffectComposer, Outline, Selection } from "@react-three/postprocessing"
 import { BlendFunction } from "postprocessing"
 
 export const PostProcess = ({ children }: { children: React.ReactNode }) => {
@@ -15,6 +15,11 @@ export const PostProcess = ({ children }: { children: React.ReactNode }) => {
                     hiddenEdgeColor={0xffffff}
                     pulseSpeed={0}
 
+                />
+                <Bloom
+                    intensity={2.1}
+                    luminanceThreshold={0.15}
+                    luminanceSmoothing={0.9}
                 />
             </EffectComposer>
             {children}
