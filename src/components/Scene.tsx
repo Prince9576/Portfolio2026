@@ -1,5 +1,4 @@
 import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
-import Workspace from "./Room.tsx";
 import { memo } from "react";
 import React from "react";
 import Light from "./Light";
@@ -8,6 +7,7 @@ import useSceneLights from "../hooks/useSceneLights";
 import PostProcess from "./PostProcess";
 import { NavigationProvider, useNavigationContext } from "../context/NavigationContext.tsx";
 import useNavigation from "../hooks/useNavigation";
+import Room from "./Room.tsx";
 
 const Scene = memo(() => {
     return (
@@ -68,7 +68,7 @@ const SceneContent = memo(() => {
             {/* All lights configured */}
             <Light lights={lights} showHelpers={false} />
 
-            <Workspace />
+            <Room />
 
             {/* Bake shadows after scene loads for better performance */}
             <BakeShadows />

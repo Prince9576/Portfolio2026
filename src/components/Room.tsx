@@ -4,11 +4,11 @@ import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
 import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
-import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Laptop from './Laptop';
+import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 
 
-const Workspace = memo(() => {
+const Main = memo(() => {
 
     /* Base */
     const { nodes, materials } = useGLTF('/Models/gaming_raw6.glb', true) as any;
@@ -871,8 +871,8 @@ const Workspace = memo(() => {
     )
 });
 
-Workspace.displayName = 'Workspace';
+Main.displayName = 'Main';
 
 useGLTF.preload('/Models/gaming_raw6.glb');
 
-export default Workspace;
+export default Main;
