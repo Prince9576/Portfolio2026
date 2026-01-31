@@ -6,9 +6,11 @@ import { LAPTOP_CAMERA_VIEW } from "../constants";
 import WorkEx from "./WorkEx";
 import { selectionContext } from "@react-three/postprocessing";
 import * as THREE from 'three';
+import { useNavigationContext } from "../context/NavigationContext";
 
 const Laptop = (props: any) => {
     const { flyToPosition } = useNavigation();
+    const { isZoomed } = useNavigationContext();
     const { nodes, materials } = useGLTF('/Models/mac-draco.glb', true) as any;
     const groupRef = useRef<THREE.Group>(null);
     const meshesRef = useRef<THREE.Object3D[]>([]);
@@ -30,13 +32,14 @@ const Laptop = (props: any) => {
     }, []);
 
     const handleClick = useCallback(() => {
+        if (isZoomed) return;
         flyToPosition(
             LAPTOP_CAMERA_VIEW.position,
             LAPTOP_CAMERA_VIEW.target,
             LAPTOP_CAMERA_VIEW.rotation,
             1
         );
-    }, [flyToPosition]);
+    }, [flyToPosition, isZoomed]);
 
     const addToSelection = useCallback(() => {
         if (!selectionApi) return;

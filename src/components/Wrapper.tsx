@@ -1,8 +1,9 @@
 import { Canvas } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense, useRef, useState, useEffect } from "react";
 import { Perf } from "r3f-perf";
+import EscapeButton from "./EscapeButton";
 // import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
 
 // Component to render CSS3D on each frame
@@ -25,8 +26,20 @@ import { Perf } from "r3f-perf";
 
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
+    const [isZoomed, setIsZoomed] = useState(false);
 
     const { colors } = useTheme();
+
+    // Listen for zoom changes from Canvas
+    useEffect(() => {
+        const handleZoomChanged = (e: Event) => {
+            const customEvent = e as CustomEvent<{ isZoomed: boolean }>;
+            setIsZoomed(customEvent.detail.isZoomed);
+        };
+
+        window.addEventListener('navigationZoomChanged', handleZoomChanged);
+        return () => window.removeEventListener('navigationZoomChanged', handleZoomChanged);
+    }, []);
     return (
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
             {/* CSS3D Container - rendered ABOVE WebGL canvas */}
@@ -64,11 +77,12 @@ const Wrapper = () => {
                 dpr={[1, 2]}
                 performance={{ min: 0.5 }}
             >
-                <Perf style={{ zIndex: 100000000 }} position="top-left" />
+                {/* <Perf style={{ zIndex: 100000000 }} position="top-left" /> */}
                 <Suspense fallback={<></>}>
                     <LazyScene />
                 </Suspense>
             </Canvas>
+            <EscapeButton isVisible={isZoomed} />
         </div>
     )
 }
