@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 
 function Shelf(props: any) {
-    const { nodes, materials } = useGLTF('/Models/Shelf.glb') as any;
+    const { nodes, materials } = useGLTF('/Models/Shelf_5.glb') as any;
     return (
         <group {...props} dispose={null}>
             <group rotation={[-Math.PI / 2, 0, 0]} scale={0.45}>
@@ -76,33 +76,57 @@ function Shelf(props: any) {
                     material={materials['Material.001']}
                 />
             </group>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Shelf1001.geometry}
-                material={materials.Material}
+            <group
                 position={[0.05, 2.777, 0.121]}
                 rotation={[-Math.PI, 0, -Math.PI]}
-                scale={[-0.491, -0.05, -0.318]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Shelf2001.geometry}
-                material={materials.Material}
+                scale={[-0.491, -0.05, -0.318]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube006.geometry}
+                    material={materials['Material.003']}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube006_1.geometry}
+                    material={materials.Neon_bike}
+                />
+            </group>
+            <group
                 position={[0.05, 1.573, 0.121]}
                 rotation={[-Math.PI, 0, -Math.PI]}
-                scale={[-0.491, -0.05, -0.318]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Shelf3001.geometry}
-                material={materials.Material}
+                scale={[-0.491, -0.05, -0.318]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube005.geometry}
+                    material={materials['Material.003']}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube005_1.geometry}
+                    material={materials.Neon_edge_3}
+                />
+            </group>
+            <group
                 position={[0.05, 2.175, -0.942]}
                 rotation={[-Math.PI, 0, -Math.PI]}
-                scale={[-0.491, -0.05, -0.318]}
-            />
+                scale={[-0.491, -0.05, -0.318]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube004.geometry}
+                    material={materials['Material.003']}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cube004_1.geometry}
+                    material={materials.Neon_edge_2}
+                />
+            </group>
         </group>
     )
 }
