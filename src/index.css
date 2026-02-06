@@ -37,14 +37,14 @@ body {
 .tv-content {
   width: 96px;
   height: 92px;
-  background: #f0f0f0;
+  background: #141414;
   border-radius: 3px;
   padding: 0;
 }
 
 .tv-wrapper {
-  width: 192px;
-  height: 184px;
-  transform: scale(0.5);
+  width: 960px;
+  height: 920px;
+  transform: scale(0.1);
   transform-origin: top left;
 }
