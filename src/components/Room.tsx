@@ -8,6 +8,7 @@ import Laptop from './Laptop';
 import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Shelf from './Shelf';
 import TvScreenContent from './TvScreenContent';
+import useOutline from '../hooks/useOutline';
 
 
 const Main = memo(() => {
@@ -22,9 +23,11 @@ const Main = memo(() => {
     const guitarRef = useRef<THREE.Mesh>(null);
     const tvScreenRef = useRef<THREE.Mesh>(null);
     const wallFrameRef = useRef<THREE.Mesh>(null);
+    const tvGroupRef = useRef<THREE.Group>(null);
     /* Hooks */
     const guitarSpotlight = useGuitarSpotlight(guitarRef);
     const wallFrameSpotlight = useWallFrameSpotlight(wallFrameRef);
+    const { on3DPointerOver, on3DPointerOut, onHtmlMouseEnter, onHtmlMouseLeave } = useOutline(tvGroupRef);
 
 
     return (
@@ -120,7 +123,11 @@ const Main = memo(() => {
             <group
                 position={[-0.28, 3.631, -3.878]}
                 rotation={[Math.PI / 2, 0, 0]}
-                scale={[1.967, 1.124, 1.124]}>
+                scale={[1.967, 1.124, 1.124]}
+                ref={tvGroupRef}
+                onPointerOver={on3DPointerOver}
+                onPointerOut={on3DPointerOut}
+            >
                 <mesh castShadow receiveShadow geometry={nodes.Plane006.geometry} material={materials.TV} />
                 <mesh
                     ref={tvScreenRef}

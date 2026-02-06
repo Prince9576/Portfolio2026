@@ -14,7 +14,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
     fontFamily: 'Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif',
     overflow: 'hidden',
     position: 'relative',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    pointerEvents: 'auto'
 };
 
 const LOGO_CONTAINER_STYLE: React.CSSProperties = {
@@ -178,7 +179,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     }, [onScreenClick]);
 
     return (
-        <div onClick={handleContainerClick} style={CONTAINER_STYLE}>
+        <div className="tv-content-wrapper" onMouseEnter={() => console.log('mouse enter')} onMouseLeave={() => console.log('mouse leave')} onClick={handleContainerClick} style={CONTAINER_STYLE}>
             {/* Netflix Logo */}
             <div style={LOGO_CONTAINER_STYLE}>
                 <img
