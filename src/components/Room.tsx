@@ -129,7 +129,7 @@ const Main = memo(() => {
                     geometry={nodes.Plane006_1.geometry}
                 >
                     <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
-                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, 0.09]} transform occlude="blending">
+                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, -0.025]} transform occlude="blending">
                         <div
                             className="tv-wrapper"
 
