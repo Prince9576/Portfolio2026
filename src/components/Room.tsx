@@ -1,5 +1,5 @@
 
-import { Text3D, useGLTF } from '@react-three/drei'
+import { Html, Text3D, useGLTF } from '@react-three/drei'
 import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
@@ -7,6 +7,7 @@ import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
 import Laptop from './Laptop';
 import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Shelf from './Shelf';
+import TvScreenContent from './TvScreenContent';
 
 
 const Main = memo(() => {
@@ -128,17 +129,14 @@ const Main = memo(() => {
                     geometry={nodes.Plane006_1.geometry}
                 >
                     <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
-                    {/* <Html
-                        className='tv-content-outer-container'
-                        transform
-                        rotation={[-Math.PI / 2, 0, 0]}
-                        scale={0.5}
-                        position={[0, 0, 0.001]}
-                    >
+                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, 0.09]} transform occlude="blending">
+                        <div
+                            className="tv-wrapper"
 
-                        <TvScreenContent />
-
-                    </Html> */}
+                        >
+                            <TvScreenContent />
+                        </div>
+                    </Html>
                 </mesh>
                 <mesh
                     castShadow
@@ -326,15 +324,16 @@ const Main = memo(() => {
                     scale={15.302}
                 />
             </group>
-            <mesh
+            <group
                 castShadow
                 receiveShadow
-                geometry={nodes.Dvd_Player.geometry}
-                material={materials['DVD Player']}
-                position={[-0.063, 0.575, -3.27]}
-                rotation={[Math.PI, 0, Math.PI]}
-                scale={[0.075, 0.064, 0.086]}>
-                <mesh
+                // geometry={nodes.Dvd_Player.geometry}
+                // material={materials['DVD Player']}
+                position={[-0.063, 0.975, -3.27]}
+                rotation={[0, -Math.PI / 2, -Math.PI / 2]}
+                scale={[1, 1, 1]}>
+                {/* <primitive object={ps5Scene} /> */}
+                {/* <mesh
                     castShadow
                     receiveShadow
                     geometry={nodes.Arch35_050_001.geometry}
@@ -381,8 +380,8 @@ const Main = memo(() => {
                     receiveShadow
                     geometry={nodes.Arch35_058_001.geometry}
                     material={materials.pesdvdpeq}
-                />
-            </mesh>
+                /> */}
+            </group>
             <group>
                 <mesh
                     ref={guitarRef}

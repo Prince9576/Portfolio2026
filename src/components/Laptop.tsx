@@ -104,10 +104,10 @@ const Laptop = (props: any) => {
                     <mesh material={materials.aluminium} geometry={nodes['Cube008'].geometry} />
                     <mesh material={materials['matte.001']} geometry={nodes['Cube008_1'].geometry} />
                     <mesh geometry={nodes['Cube008_2'].geometry}>
-                        <Html className="content" rotation-x={-Math.PI / 2} position={[0, 0.05, -0.09]} transform occlude="blending">
+                        <Html className="laptop-content" rotation-x={-Math.PI / 2} position={[0, 0.05, -0.09]} transform occlude="blending">
                             <div
                                 onClick={handleClick}
-                                className="wrapper"
+                                className="laptop-wrapper"
                                 onMouseEnter={onHtmlMouseEnter}
                                 onMouseLeave={onHtmlMouseLeave}
                             >
