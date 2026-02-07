@@ -9,6 +9,7 @@ import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Shelf from './Shelf';
 import TvScreenContent from './TvScreenContent';
 import useOutline from '../hooks/useOutline';
+import Test from './Test';
 
 
 const Main = memo(() => {
@@ -136,10 +137,11 @@ const Main = memo(() => {
                     geometry={nodes.Plane006_1.geometry}
                 >
                     <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
-                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, -0.025]} transform occlude="blending">
+                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, -0.025]} transform occlude="blending" scale={0.2}>
                         <div
                             className="tv-wrapper"
-
+                            onMouseEnter={onHtmlMouseEnter}
+                            onMouseLeave={onHtmlMouseLeave}
                         >
                             <TvScreenContent />
                         </div>
