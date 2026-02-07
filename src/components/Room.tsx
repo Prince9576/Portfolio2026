@@ -1,5 +1,5 @@
 
-import { Html, Text3D, useGLTF } from '@react-three/drei'
+import { Text3D, useGLTF } from '@react-three/drei'
 import { memo, useRef } from 'react';
 import * as THREE from 'three';
 import Light from './Light';
@@ -7,9 +7,7 @@ import useGuitarSpotlight from '../hooks/useGuitarSpotlight';
 import Laptop from './Laptop';
 import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Shelf from './Shelf';
-import TvScreenContent from './TvScreenContent';
-import useOutline from '../hooks/useOutline';
-import Test from './Test';
+import Tv from './Tv';
 
 
 const Main = memo(() => {
@@ -22,13 +20,10 @@ const Main = memo(() => {
 
     /* Refs */
     const guitarRef = useRef<THREE.Mesh>(null);
-    const tvScreenRef = useRef<THREE.Mesh>(null);
     const wallFrameRef = useRef<THREE.Mesh>(null);
-    const tvGroupRef = useRef<THREE.Group>(null);
     /* Hooks */
     const guitarSpotlight = useGuitarSpotlight(guitarRef);
     const wallFrameSpotlight = useWallFrameSpotlight(wallFrameRef);
-    const { on3DPointerOver, on3DPointerOut, onHtmlMouseEnter, onHtmlMouseLeave } = useOutline(tvGroupRef);
 
 
     return (
@@ -121,39 +116,7 @@ const Main = memo(() => {
                 material={materials.Metal}
                 position={[0.029, 0.2, 2.418]}
             />
-            <group
-                position={[-0.28, 3.631, -3.878]}
-                rotation={[Math.PI / 2, 0, 0]}
-                scale={[1.967, 1.124, 1.124]}
-                ref={tvGroupRef}
-                onPointerOver={on3DPointerOver}
-                onPointerOut={on3DPointerOut}
-            >
-                <mesh castShadow receiveShadow geometry={nodes.Plane006.geometry} material={materials.TV} />
-                <mesh
-                    ref={tvScreenRef}
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane006_1.geometry}
-                >
-                    <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
-                    <Html className="tv-content" rotation-x={-Math.PI / 2} position={[0.155, 0.19, -0.025]} transform occlude="blending" scale={0.2}>
-                        <div
-                            className="tv-wrapper"
-                            onMouseEnter={onHtmlMouseEnter}
-                            onMouseLeave={onHtmlMouseLeave}
-                        >
-                            <TvScreenContent />
-                        </div>
-                    </Html>
-                </mesh>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane006_2.geometry}
-                    material={materials.TVBacklight}
-                />
-            </group>
+            <Tv nodes={nodes} materials={materials} />
             <mesh
                 castShadow
                 receiveShadow
