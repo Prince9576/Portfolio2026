@@ -1,5 +1,6 @@
 import { Download, Info } from 'lucide-react';
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import useAudioManager, { AudioType } from '../hooks/useAudioManager';
 
 interface TvScreenContentProps {
     onScreenClick?: () => void;
@@ -176,6 +177,33 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const scrollContainerRef2 = useRef<HTMLDivElement>(null);
     const logoRef = useRef<HTMLImageElement>(null);
 
+    const [showIntro, setShowIntro] = useState(true);
+    const [contentOpacity, setContentOpacity] = useState(0);
+
+    const { play: playNetflixSound, cleanup: cleanupNetflixSound } = useAudioManager(AudioType.NETFLIX, 2500);
+
+    useEffect(() => {
+        // Play sound after a brief delay
+        const soundTimer = setTimeout(() => {
+            playNetflixSound();
+        }, 500);
+
+        // Hide intro and fade in content after GIF duration (typically 3-4 seconds)
+        const introTimer = setTimeout(() => {
+            setShowIntro(false);
+            // Start fading in the content
+            setTimeout(() => {
+                setContentOpacity(1);
+            }, 100);
+        }, 2500);
+
+        return () => {
+            clearTimeout(soundTimer);
+            clearTimeout(introTimer);
+            cleanupNetflixSound();
+        };
+    }, [playNetflixSound, cleanupNetflixSound]);
+
     const handleContainerClick = useCallback(() => {
         onScreenClick?.();
     }, [onScreenClick]);
@@ -191,73 +219,110 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
 
     return (
         <div className="tv-content-wrapper" onClick={handleContainerClick} style={CONTAINER_STYLE}>
-            {/* Netflix Logo */}
-            <div style={LOGO_CONTAINER_STYLE}>
-                <img
-                    ref={logoRef}
-                    src="/images/Logonetflix.png"
-                    alt="Netflix"
-                    style={LOGO_STYLE}
-                />
-            </div>
+            {/* Netflix Intro Animation */}
+            {showIntro && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        zIndex: 999,
+                        backgroundColor: '#000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <img
+                        src="images/netflix_intro.gif"
+                        alt="Netflix Intro"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                        }}
+                    />
+                </div>
+            )}
 
-            {/* Scrollable Container */}
-            <div style={SCROLL_CONTAINER_STYLE} onScroll={handleScroll}>
-                {/* Hero Section */}
-                <div style={HERO_SECTION_STYLE}>
-                    {/* Gradient Overlays */}
-                    <div style={GRADIENT_RIGHT_STYLE} />
-                    <div style={GRADIENT_BOTTOM_STYLE} />
+            {/* Main Content with fade-in animation */}
+            <div
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    opacity: contentOpacity,
+                    transition: 'opacity 1s ease-in-out',
+                }}
+            >
+                {/* Netflix Logo */}
+                <div style={LOGO_CONTAINER_STYLE}>
+                    <img
+                        ref={logoRef}
+                        src="/images/Logonetflix.png"
+                        alt="Netflix"
+                        style={LOGO_STYLE}
+                    />
+                </div>
 
-                    {/* Hero Content */}
-                    <div style={HERO_CONTENT_STYLE}>
-                        {/* Title */}
-                        <h1 style={TITLE_STYLE}>Prince Kumar</h1>
+                {/* Scrollable Container */}
+                <div style={SCROLL_CONTAINER_STYLE} onScroll={handleScroll}>
+                    {/* Hero Section */}
+                    <div style={HERO_SECTION_STYLE}>
+                        {/* Gradient Overlays */}
+                        <div style={GRADIENT_RIGHT_STYLE} />
+                        <div style={GRADIENT_BOTTOM_STYLE} />
 
-                        {/* Description */}
-                        <p style={DESCRIPTION_STYLE}>
-                            Senior Frontend Developer with 6+ years of experience crafting exceptional
-                            user experiences. Specialized in React, TypeScript, and modern web technologies.
-                            Passionate about building performant, scalable, and visually stunning applications.
-                        </p>
+                        {/* Hero Content */}
+                        <div style={HERO_CONTENT_STYLE}>
+                            {/* Title */}
+                            <h1 style={TITLE_STYLE}>Prince Kumar</h1>
 
-                        {/* Buttons */}
-                        <div style={BUTTONS_CONTAINER_STYLE}>
-                            <ResumeButton />
-                            <MoreInfoButton />
+                            {/* Description */}
+                            <p style={DESCRIPTION_STYLE}>
+                                Senior Frontend Developer with 6+ years of experience crafting exceptional
+                                user experiences. Specialized in React, TypeScript, and modern web technologies.
+                                Passionate about building performant, scalable, and visually stunning applications.
+                            </p>
+
+                            {/* Buttons */}
+                            <div style={BUTTONS_CONTAINER_STYLE}>
+                                <ResumeButton />
+                                <MoreInfoButton />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Favourite Recommendations Section */}
+                    <div style={{ ...SECTION_STYLE, marginBottom: '70px' }}>
+                        <h2 style={SECTION_TITLE_STYLE}>Favourite Recommendations</h2>
+
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <div ref={scrollContainerRef1} style={CAROUSEL_CONTAINER_STYLE}>
+                                {RECOMMENDATIONS.map((item) => (
+                                    <ThumbnailCard key={item.id} image={item.image} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Top Picks Section */}
+                    <div style={{ ...SECTION_STYLE, paddingBottom: '40px' }}>
+                        <h2 style={SECTION_TITLE_STYLE}>Top Picks</h2>
+
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <div ref={scrollContainerRef2} style={CAROUSEL_CONTAINER_STYLE}>
+                                {TOP_PICKS.map((item) => (
+                                    <ThumbnailCard key={item.id} image={item.image} />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Favourite Recommendations Section */}
-                <div style={{ ...SECTION_STYLE, marginBottom: '70px' }}>
-                    <h2 style={SECTION_TITLE_STYLE}>Favourite Recommendations</h2>
-
-                    <div style={{ position: 'relative', width: '100%' }}>
-                        <div ref={scrollContainerRef1} style={CAROUSEL_CONTAINER_STYLE}>
-                            {RECOMMENDATIONS.map((item) => (
-                                <ThumbnailCard key={item.id} image={item.image} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Top Picks Section */}
-                <div style={{ ...SECTION_STYLE, paddingBottom: '40px' }}>
-                    <h2 style={SECTION_TITLE_STYLE}>Top Picks</h2>
-
-                    <div style={{ position: 'relative', width: '100%' }}>
-                        <div ref={scrollContainerRef2} style={CAROUSEL_CONTAINER_STYLE}>
-                            {TOP_PICKS.map((item) => (
-                                <ThumbnailCard key={item.id} image={item.image} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Custom scrollbar styles */}
-            <style>{`
+                {/* Custom scrollbar styles */}
+                <style>{`
                 div::-webkit-scrollbar {
                     width: 10px;
                     height: 10px;
@@ -273,6 +338,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     background: #555;
                 }
             `}</style>
+            </div>
         </div>
     );
 });

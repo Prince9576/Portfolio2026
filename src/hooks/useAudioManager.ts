@@ -4,6 +4,7 @@ export const AudioType = {
     XP: 'xp',
     ZOOM_IN: 'zoom_in',
     ZOOM_OUT: 'zoom_out',
+    NETFLIX: 'netflix',
 } as const;
 
 export type AudioType = typeof AudioType[keyof typeof AudioType];
@@ -20,6 +21,9 @@ const useAudioManager = (type: AudioType, duration: number = 1000) => {
             break;
         case AudioType.ZOOM_OUT:
             audioRef.current = new Audio('/sounds/zoom.mp3');
+            break;
+        case AudioType.NETFLIX:
+            audioRef.current = new Audio('/sounds/netflix.mp3');
             break;
     }
 
