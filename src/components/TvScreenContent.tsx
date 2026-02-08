@@ -28,7 +28,8 @@ const LOGO_CONTAINER_STYLE: React.CSSProperties = {
 
 const LOGO_STYLE: React.CSSProperties = {
     height: '35px',
-    width: 'auto'
+    width: 'auto',
+    transition: 'opacity 0.3s ease'
 };
 
 const SCROLL_CONTAINER_STYLE: React.CSSProperties = {
@@ -173,16 +174,27 @@ const TOP_PICKS = [
 const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const scrollContainerRef1 = useRef<HTMLDivElement>(null);
     const scrollContainerRef2 = useRef<HTMLDivElement>(null);
+    const logoRef = useRef<HTMLImageElement>(null);
 
     const handleContainerClick = useCallback(() => {
         onScreenClick?.();
     }, [onScreenClick]);
 
+    const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop } = e.currentTarget;
+        if (scrollTop > 30 && logoRef.current) {
+            logoRef.current.style.opacity = '0';
+        } else {
+            logoRef.current && (logoRef.current.style.opacity = '1');
+        }
+    }, []);
+
     return (
-        <div className="tv-content-wrapper" onMouseEnter={() => console.log('mouse enter')} onMouseLeave={() => console.log('mouse leave')} onClick={handleContainerClick} style={CONTAINER_STYLE}>
+        <div className="tv-content-wrapper" onClick={handleContainerClick} style={CONTAINER_STYLE}>
             {/* Netflix Logo */}
             <div style={LOGO_CONTAINER_STYLE}>
                 <img
+                    ref={logoRef}
                     src="/images/Logonetflix.png"
                     alt="Netflix"
                     style={LOGO_STYLE}
@@ -190,7 +202,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
             </div>
 
             {/* Scrollable Container */}
-            <div style={SCROLL_CONTAINER_STYLE}>
+            <div style={SCROLL_CONTAINER_STYLE} onScroll={handleScroll}>
                 {/* Hero Section */}
                 <div style={HERO_SECTION_STYLE}>
                     {/* Gradient Overlays */}
