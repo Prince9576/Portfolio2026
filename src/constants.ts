@@ -9,9 +9,9 @@ const SCREEN_SCALE = TV_SCREEN_SIZE_UNITS.width / screenWidth; // 0.00148
 
 
 const LAPTOP_CAMERA_VIEW = {
-    position: { x: 0.15, y: 0.35, z: 0.32 },
+    position: { x: 0.15, y: 0.25, z: 0.12 },
     target: { x: 3.66, y: -4.96, z: -7.59 },
-    rotation: { x: 0, y: 0, z: 0, w: 1 }
+    rotation: { x: -0.35, y: -0.29, z: -0.01, w: 1 }
 }
 
 const TV_CAMERA_VIEW = {
