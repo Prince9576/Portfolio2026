@@ -20,9 +20,10 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const LOGO_CONTAINER_STYLE: React.CSSProperties = {
     position: 'absolute',
-    top: '20px',
+    top: '40px',
     left: '30px',
-    zIndex: 10
+    zIndex: 10,
+    transform: 'scaleY(1.45)'
 };
 
 const LOGO_STYLE: React.CSSProperties = {
@@ -45,7 +46,9 @@ const HERO_SECTION_STYLE: React.CSSProperties = {
     height: '500px',
     backgroundImage: 'url(/images/netflix_bg.png)',
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
+    transform: 'scaleY(1.5) translateY(18px)',
+    marginBottom: '8rem'
 };
 
 const GRADIENT_RIGHT_STYLE: React.CSSProperties = {
@@ -113,7 +116,8 @@ const BUTTON_BASE_STYLE: React.CSSProperties = {
 
 const SECTION_STYLE: React.CSSProperties = {
     padding: '20px 30px 30px',
-    position: 'relative'
+    position: 'relative',
+    transform: 'scaleY(1.5) translateY(15px)',
 };
 
 const SECTION_TITLE_STYLE: React.CSSProperties = {
@@ -153,21 +157,17 @@ const THUMBNAIL_GRADIENT_STYLE: React.CSSProperties = {
 
 // Dummy data
 const RECOMMENDATIONS = [
-    { id: 1, color: '#E50914' },
-    { id: 2, color: '#564d4d' },
-    { id: 3, color: '#831010' },
-    { id: 4, color: '#221f1f' },
-    { id: 5, color: '#B20710' },
-    { id: 6, color: '#666666' },
+    { id: 1, image: '/images/bb.jpg' },
+    { id: 2, image: '/images/dark.jpg' },
+    { id: 3, image: '/images/interstellar.jpg' },
+    { id: 4, image: '/images/coherence.webp' },
 ];
 
 const TOP_PICKS = [
-    { id: 1, color: '#141414' },
-    { id: 2, color: '#831010' },
-    { id: 3, color: '#E50914' },
-    { id: 4, color: '#564d4d' },
-    { id: 5, color: '#221f1f' },
-    { id: 6, color: '#B20710' },
+    { id: 1, image: '/images/aot.webp' },
+    { id: 2, image: '/images/naruto.jpeg' },
+    { id: 3, image: '/images/deathnote.jpg' },
+    { id: 4, image: '/images/code_geass.jpg' },
 ];
 
 const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
@@ -218,13 +218,13 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                 </div>
 
                 {/* Favourite Recommendations Section */}
-                <div style={SECTION_STYLE}>
+                <div style={{ ...SECTION_STYLE, marginBottom: '70px' }}>
                     <h2 style={SECTION_TITLE_STYLE}>Favourite Recommendations</h2>
 
                     <div style={{ position: 'relative', width: '100%' }}>
                         <div ref={scrollContainerRef1} style={CAROUSEL_CONTAINER_STYLE}>
                             {RECOMMENDATIONS.map((item) => (
-                                <ThumbnailCard key={item.id} color={item.color} />
+                                <ThumbnailCard key={item.id} image={item.image} />
                             ))}
                         </div>
                     </div>
@@ -237,7 +237,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     <div style={{ position: 'relative', width: '100%' }}>
                         <div ref={scrollContainerRef2} style={CAROUSEL_CONTAINER_STYLE}>
                             {TOP_PICKS.map((item) => (
-                                <ThumbnailCard key={item.id} color={item.color} />
+                                <ThumbnailCard key={item.id} image={item.image} />
                             ))}
                         </div>
                     </div>
@@ -316,7 +316,7 @@ const MoreInfoButton = memo(() => {
 
 MoreInfoButton.displayName = 'MoreInfoButton';
 
-const ThumbnailCard = memo(({ color }: { color: string }) => {
+const ThumbnailCard = memo(({ image }: { image: string }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = useCallback(() => setIsHovered(true), []);
@@ -328,11 +328,19 @@ const ThumbnailCard = memo(({ color }: { color: string }) => {
             onMouseLeave={handleMouseLeave}
             style={{
                 ...THUMBNAIL_BASE_STYLE,
-                backgroundColor: color,
                 transform: isHovered ? 'scale(1.08)' : 'scale(1)',
                 zIndex: isHovered ? 5 : 1
             }}
         >
+            <img
+                src={image}
+                alt=""
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                }}
+            />
             <div style={THUMBNAIL_GRADIENT_STYLE} />
         </div>
     );
