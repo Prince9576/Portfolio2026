@@ -49,3 +49,10 @@ body {
   transform: scale(0.5);
   transform-origin: top left;
 }
+
+#leva__root {
+  position: fixed !important;
+  top: 0;
+  right: 0;
+  z-index: 1000000000 !important;
+}
