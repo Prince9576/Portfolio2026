@@ -8,6 +8,7 @@ import Laptop from './Laptop';
 import useWallFrameSpotlight from '../hooks/useWallFrameSpotlight';
 import Shelf from './Shelf';
 import Tv from './Tv';
+import Phone from './Phone';
 
 
 const Main = memo(() => {
@@ -95,6 +96,9 @@ const Main = memo(() => {
                     material={materials.Pizza_01}
                 />
             </group>
+
+            <Phone />
+
             <group position={[0, 0.411, 0]} scale={4}>
                 <mesh
                     castShadow
