@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 
 export const AudioType = {
     XP: 'xp',
@@ -9,33 +9,36 @@ export const AudioType = {
 
 export type AudioType = typeof AudioType[keyof typeof AudioType];
 
+const AUDIO_SRC: Record<AudioType, string> = {
+    [AudioType.XP]: '/sounds/xp.mp3',
+    [AudioType.ZOOM_IN]: '/sounds/zoom.mp3',
+    [AudioType.ZOOM_OUT]: '/sounds/zoom.mp3',
+    [AudioType.NETFLIX]: '/sounds/netflix.mp3',
+};
+
 const useAudioManager = (type: AudioType, duration: number = 1000) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Lazy-init the Audio object once, not on every render
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    switch (type) {
-        case AudioType.XP:
-            audioRef.current = new Audio('/sounds/xp.mp3');
-            break;
-        case AudioType.ZOOM_IN:
-            audioRef.current = new Audio('/sounds/zoom.mp3');
-            break;
-        case AudioType.ZOOM_OUT:
-            audioRef.current = new Audio('/sounds/zoom.mp3');
-            break;
-        case AudioType.NETFLIX:
-            audioRef.current = new Audio('/sounds/netflix.mp3');
-            break;
-    }
 
-    function play() {
-        audioRef.current?.play().catch(err => console.log('Audio play failed:', err));
+    const getAudio = useCallback(() => {
+        if (!audioRef.current) {
+            audioRef.current = new Audio(AUDIO_SRC[type]);
+        }
+        return audioRef.current;
+    }, [type]);
+
+    const play = useCallback(() => {
+        const audio = getAudio();
+        audio.currentTime = 0;
+        audio.play().catch(err => console.log('Audio play failed:', err));
         timerRef.current = setTimeout(() => {
-            audioRef.current?.pause();
+            audio.pause();
             timerRef.current = null;
         }, duration);
-    }
+    }, [getAudio, duration]);
 
-    function cleanup() {
+    const cleanup = useCallback(() => {
         if (timerRef.current) {
             clearTimeout(timerRef.current);
             timerRef.current = null;
@@ -44,8 +47,9 @@ const useAudioManager = (type: AudioType, duration: number = 1000) => {
             audioRef.current.pause();
             audioRef.current = null;
         }
-    }
+    }, []);
+
     return { play, cleanup };
-}
+};
 
 export default useAudioManager;

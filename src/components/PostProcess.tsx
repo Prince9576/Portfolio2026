@@ -5,7 +5,7 @@ export const PostProcess = ({ children }: { children: React.ReactNode }) => {
     return (
         <Selection>
             <EffectComposer
-                multisampling={8}
+                multisampling={4}
                 autoClear={false}
             >
                 <Outline

@@ -1,35 +1,26 @@
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import * as THREE from 'three';
 
 /**
  * Hook to enable frustum culling optimization
- * This ensures objects outside the camera view are not rendered
+ * Sets frustumCulled=true and computes bounding spheres ONCE on mount.
+ * Three.js handles per-frame culling natively — no need for useFrame traversal.
  */
 export const useFrustumCulling = () => {
     const { scene } = useThree();
 
     useEffect(() => {
-        // Ensure all meshes have frustum culling enabled
         scene.traverse((object) => {
             if (object instanceof THREE.Mesh) {
                 object.frustumCulled = true;
-            }
-        });
-    }, [scene]);
-
-    useFrame(() => {
-        // Update frustum culling on each frame
-        // This is automatically done by Three.js but we can optimize further
-        scene.traverse((object) => {
-            if (object instanceof THREE.Mesh && object.geometry.boundingSphere) {
-                // Ensure bounding sphere is computed for accurate culling
-                if (!object.geometry.boundingSphere) {
+                // Pre-compute bounding sphere for accurate culling
+                if (object.geometry && !object.geometry.boundingSphere) {
                     object.geometry.computeBoundingSphere();
                 }
             }
         });
-    });
+    }, [scene]);
 };
 
 export default useFrustumCulling;

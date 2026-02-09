@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import useNavigation from "../hooks/useNavigation";
 import { LAPTOP_CAMERA_VIEW } from "../constants";
@@ -7,7 +7,7 @@ import useOutline from "../hooks/useOutline";
 import * as THREE from 'three';
 import { useNavigationContext } from "../context/NavigationContext";
 
-const Laptop = (props: any) => {
+const Laptop = memo((props: any) => {
     const { flyToPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
     const { nodes, materials } = useGLTF('/Models/mac-draco.glb', true) as any;
@@ -59,7 +59,9 @@ const Laptop = (props: any) => {
             <mesh material={materials.touchbar} geometry={nodes.touchbar.geometry} position={[0, -0.03, 1.2]} />
         </group>
     )
-};
+});
+
+Laptop.displayName = 'Laptop';
 
 useGLTF.preload('/Models/mac-draco.glb');
 

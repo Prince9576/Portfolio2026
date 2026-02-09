@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Briefcase, Code, Trophy, Zap, Star, Target, Award, TrendingUp } from 'lucide-react';
-import useAudioManager from '../hooks/useAudioManager';
-import { AudioType } from '../hooks/useAudioManager';
+import useAudioManager, { AudioType } from '../hooks/useAudioManager';
 
 // Extract static styles
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -141,14 +140,20 @@ const WorkEx = memo(() => {
         const container = containerRef.current;
         if (!container) return;
 
+        let rafId: number | null = null;
         const handleScroll = () => {
-            setScrollY(container.scrollTop);
+            if (rafId !== null) return;
+            rafId = requestAnimationFrame(() => {
+                setScrollY(container.scrollTop);
+                rafId = null;
+            });
         };
 
-        container.addEventListener('scroll', handleScroll);
+        container.addEventListener('scroll', handleScroll, { passive: true });
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
+            if (rafId !== null) cancelAnimationFrame(rafId);
         };
     }, []);
 
@@ -237,14 +242,14 @@ const WorkEx = memo(() => {
 
             {/* Floating Particles */}
             <div style={PARTICLES_CONTAINER_STYLE}>
-                {[...Array(20)].map((_, i) => (
+                {[...Array(8)].map((_, i) => (
                     <div
                         key={i}
                         style={{
                             ...PARTICLE_BASE_STYLE,
-                            left: `${(i * 5) % 100}%`,
-                            top: `${(i * 7) % 100}%`,
-                            transform: `translateY(${scrollY * (0.1 + i * 0.01)}px)`
+                            left: `${(i * 12.5) % 100}%`,
+                            top: `${(i * 12.5) % 100}%`,
+                            transform: `translateY(${scrollY * (0.1 + i * 0.02)}px)`
                         }}
                     />
                 ))}

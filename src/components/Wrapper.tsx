@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
 import { lazy, Suspense, useRef, useState, useEffect } from "react";
-import { Perf } from "r3f-perf";
+// import { Perf } from "r3f-perf";
 import EscapeButton from "./EscapeButton";
 // import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
 
@@ -62,15 +62,16 @@ const Wrapper = () => {
                     type: THREE.PCFSoftShadowMap,
                 }}
                 gl={{
-                    antialias: true,
+                    antialias: false, // Handled by EffectComposer multisampling
                     toneMapping: THREE.ACESFilmicToneMapping,
                     toneMappingExposure: 0.5,
                     outputColorSpace: THREE.SRGBColorSpace,
+                    powerPreference: 'high-performance',
                 }}
                 camera={{
                     position: [0, 7.5, 10],
                     near: 0.1,
-                    far: 10000,
+                    far: 100,
                     fov: 50,
                 }}
                 style={{ backgroundColor: colors.common.black }}
