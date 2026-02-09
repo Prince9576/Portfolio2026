@@ -104,4 +104,4 @@ Shelf.displayName = 'Shelf';
 
 export default Shelf;
 
-useGLTF.preload('/Models/Shelf_5.glb')
+useGLTF.preload('/Models/Shelf_5.glb', true);

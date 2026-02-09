@@ -636,6 +636,6 @@ const Main = memo(() => {
 
 Main.displayName = 'Main';
 
-useGLTF.preload('/Models/gaming_raw6.glb');
+useGLTF.preload('/Models/gaming_raw6.glb', true);
 
 export default Main;

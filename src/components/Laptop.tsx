@@ -63,6 +63,6 @@ const Laptop = memo((props: any) => {
 
 Laptop.displayName = 'Laptop';
 
-useGLTF.preload('/Models/mac-draco.glb');
+useGLTF.preload('/Models/mac-draco.glb', true);
 
 export default Laptop;
