@@ -21,9 +21,9 @@ const TV_CAMERA_VIEW = {
 }
 
 const PHONE_CAMERA_VIEW = {
-    position: { x: 3.288, y: 0.5, z: 1.156 },
-    target: { x: 3.288, y: 0.5, z: 1.156 },
-    rotation: { x: 0, y: 0, z: 0, w: 1 }
+    position: { x: 0.288, y: 0.1, z: 3.0 },
+    target: { x: 3.9, y: 0.5, z: 1.2 },
+    rotation: { x: -1, y: -0.2, z: -0.2, w: 1 }
 }
 
 

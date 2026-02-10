@@ -1,10 +1,15 @@
 import { useGLTF } from "@react-three/drei";
 import { memo, useCallback, useRef } from "react";
 import * as THREE from 'three';
+import type { ThreeEvent } from "@react-three/fiber";
 import useOutline from '../hooks/useOutline';
 import { useNavigationContext } from "../context/NavigationContext";
 import useNavigation from "../hooks/useNavigation";
 import { PHONE_CAMERA_VIEW } from "../constants";
+import gsap from "gsap";
+// import { useControls } from 'leva';
+// import { useThree, useFrame } from '@react-three/fiber';
+// import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 const Phone = memo(() => {
     const { nodes, materials } = useGLTF('/Models/phone.glb', true) as any;
@@ -12,6 +17,89 @@ const Phone = memo(() => {
     const { isZoomed } = useNavigationContext();
     const phoneGroupRef = useRef<THREE.Group>(null);
     const { on3DPointerOver, on3DPointerOut } = useOutline(phoneGroupRef);
+
+    const instagramRef = useRef<THREE.Mesh>(null);
+    const linkedinRef = useRef<THREE.Mesh>(null);
+    const githubRef = useRef<THREE.Mesh>(null);
+
+    const iconScales = {
+        instagram: {
+            initial: 0.0471,
+            zoomed: 0.05
+        },
+        linkedin: {
+            initial: 0.044,
+            zoomed: 0.048
+        },
+        github: {
+            initial: 0.04,
+            zoomed: 0.044
+        }
+    }
+    // const { camera, controls } = useThree();
+    // const orbitControls = controls as OrbitControlsImpl;
+
+    // const { posX, posY, posZ, targetX, targetY, targetZ, rotX, rotY, rotZ, rotW } = useControls('Phone Camera', {
+    //     posX: { value: PHONE_CAMERA_VIEW.position.x, min: -10, max: 10, step: 0.1 },
+    //     posY: { value: PHONE_CAMERA_VIEW.position.y, min: -10, max: 10, step: 0.1 },
+    //     posZ: { value: PHONE_CAMERA_VIEW.position.z, min: -10, max: 10, step: 0.1 },
+    //     targetX: { value: PHONE_CAMERA_VIEW.target.x, min: -10, max: 10, step: 0.1 },
+    //     targetY: { value: PHONE_CAMERA_VIEW.target.y, min: -10, max: 10, step: 0.1 },
+    //     targetZ: { value: PHONE_CAMERA_VIEW.target.z, min: -10, max: 10, step: 0.1 },
+    //     rotX: { value: PHONE_CAMERA_VIEW.rotation.x, min: -1, max: 1, step: 0.01 },
+    //     rotY: { value: PHONE_CAMERA_VIEW.rotation.y, min: -1, max: 1, step: 0.01 },
+    //     rotZ: { value: PHONE_CAMERA_VIEW.rotation.z, min: -1, max: 1, step: 0.01 },
+    //     rotW: { value: PHONE_CAMERA_VIEW.rotation.w, min: -1, max: 1, step: 0.01 },
+    // });
+
+    // useFrame(() => {
+    //     camera.position.set(posX, posY, posZ);
+    //     if (orbitControls) {
+    //         orbitControls.target.set(targetX, targetY, targetZ);
+    //         orbitControls.update();
+    //     }
+    //     const quat = new THREE.Quaternion(rotX, rotY, rotZ, rotW);
+    //     quat.normalize();
+    //     camera.quaternion.copy(quat);
+    // });
+
+    const handleIconPointerEnter = useCallback((icon: 'instagram' | 'linkedin' | 'github') => {
+        const ref = icon === 'instagram' ? instagramRef : icon === 'linkedin' ? linkedinRef : githubRef;
+        const scale = iconScales[icon].zoomed;
+        if (ref.current) {
+            gsap.to(ref.current.scale, {
+                x: scale,
+                y: scale,
+                z: scale,
+                duration: 0.2,
+                ease: "power2.out"
+            });
+        }
+    }, []);
+
+    const handleIconPointerLeave = useCallback((icon: 'instagram' | 'linkedin' | 'github') => {
+        const ref = icon === 'instagram' ? instagramRef : icon === 'linkedin' ? linkedinRef : githubRef;
+        const scale = iconScales[icon].initial;
+        if (ref.current) {
+            gsap.to(ref.current.scale, {
+                x: scale,
+                y: scale,
+                z: scale,
+                duration: 0.2,
+                ease: "power2.out"
+            });
+        }
+    }, []);
+
+    const handleIconClick = useCallback((icon: 'instagram' | 'linkedin' | 'github', e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation(); // Prevent triggering the phone group click
+        const urls = {
+            instagram: 'https://www.instagram.com/',
+            linkedin: 'https://www.linkedin.com/',
+            github: 'https://github.com/'
+        };
+        window.open(urls[icon], '_blank', 'noopener,noreferrer');
+    }, []);
 
     const handleClick = useCallback(() => {
         if (isZoomed) return;
@@ -63,28 +151,40 @@ const Phone = memo(() => {
                 />
             </mesh>
             <mesh
+                ref={instagramRef}
                 castShadow
                 geometry={nodes.Plane.geometry}
                 material={materials['Material.002']}
                 position={[0.479, 1.50, -0.563]}
                 rotation={[0, -0.177, 0]}
-                scale={0.0471}
+                scale={iconScales.instagram.initial}
+                onPointerEnter={() => handleIconPointerEnter('instagram')}
+                onPointerLeave={() => handleIconPointerLeave('instagram')}
+                onClick={(e) => handleIconClick('instagram', e)}
             />
             <mesh
+                ref={linkedinRef}
                 castShadow
                 geometry={nodes.Plane001.geometry}
                 material={materials.Material}
                 position={[0.455, 1.50, -0.425]}
                 rotation={[0, -0.177, 0]}
-                scale={0.044}
+                scale={iconScales.linkedin.initial}
+                onPointerEnter={() => handleIconPointerEnter('linkedin')}
+                onPointerLeave={() => handleIconPointerLeave('linkedin')}
+                onClick={(e) => handleIconClick('linkedin', e)}
             />
             <mesh
+                ref={githubRef}
                 castShadow
                 geometry={nodes.Plane002.geometry}
                 material={materials.github}
                 position={[0.435, 1.50, -0.3]}
                 rotation={[0, -0.177, 0]}
-                scale={0.038}
+                scale={iconScales.github.initial}
+                onPointerEnter={() => handleIconPointerEnter('github')}
+                onPointerLeave={() => handleIconPointerLeave('github')}
+                onClick={(e) => handleIconClick('github', e)}
             />
         </group>
     )
