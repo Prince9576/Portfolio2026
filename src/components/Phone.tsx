@@ -1,11 +1,34 @@
 import { useGLTF } from "@react-three/drei";
-import { memo } from "react";
+import { memo, useCallback, useRef } from "react";
+import * as THREE from 'three';
+import useOutline from '../hooks/useOutline';
+import { useNavigationContext } from "../context/NavigationContext";
+import useNavigation from "../hooks/useNavigation";
+import { PHONE_CAMERA_VIEW } from "../constants";
 
 const Phone = memo(() => {
     const { nodes, materials } = useGLTF('/Models/phone.glb', true) as any;
+    const { flyToPosition } = useNavigation();
+    const { isZoomed } = useNavigationContext();
+    const phoneGroupRef = useRef<THREE.Group>(null);
+    const { on3DPointerOver, on3DPointerOut } = useOutline(phoneGroupRef);
 
+    const handleClick = useCallback(() => {
+        if (isZoomed) return;
+        flyToPosition(
+            PHONE_CAMERA_VIEW.position,
+            PHONE_CAMERA_VIEW.target,
+            PHONE_CAMERA_VIEW.rotation,
+            1
+        );
+    }, [flyToPosition, isZoomed]);
     return (
-        <group position={[3.288, -1.025, 1.156]} rotation-y={0.81} dispose={null}>
+        <group position={[3.288, -1.025, 1.156]} rotation-y={0.81} dispose={null}
+            ref={phoneGroupRef}
+            onPointerOver={on3DPointerOver}
+            onPointerOut={on3DPointerOut}
+            onClick={handleClick}
+        >
             <mesh
                 castShadow
                 geometry={nodes.Phone.geometry}

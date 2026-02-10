@@ -20,5 +20,11 @@ const TV_CAMERA_VIEW = {
     rotation: { x: -0.16, y: -0.6, z: 0.09, w: 1 }
 }
 
+const PHONE_CAMERA_VIEW = {
+    position: { x: 3.288, y: 0.5, z: 1.156 },
+    target: { x: 3.288, y: 0.5, z: 1.156 },
+    rotation: { x: 0, y: 0, z: 0, w: 1 }
+}
 
-export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT, LAPTOP_CAMERA_VIEW, TV_CAMERA_VIEW };
+
+export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT, LAPTOP_CAMERA_VIEW, TV_CAMERA_VIEW, PHONE_CAMERA_VIEW };
