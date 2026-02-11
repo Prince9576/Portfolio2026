@@ -1,9 +1,11 @@
-import { Canvas } from "@react-three/fiber"
+import { Canvas, useThree } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
 import { lazy, Suspense, useRef, useState, useEffect } from "react";
 // import { Perf } from "r3f-perf";
 import EscapeButton from "./EscapeButton";
+import { Html, Hud } from "@react-three/drei";
+import { useControls } from 'leva';
 // import { useCSS3DRenderer } from "../hooks/use3DCSSRenderer";
 
 // Component to render CSS3D on each frame
@@ -24,9 +26,64 @@ import EscapeButton from "./EscapeButton";
 
 
 
+// Loading screen component with Leva controls
+const LoadingScreen = ({ showStartButton, onStartClick }: { showStartButton: boolean; onStartClick: () => void }) => {
+    const {
+        meshPosition,
+        meshRotation,
+        meshScale,
+        htmlPosition,
+        htmlRotation
+    } = useControls('Loading Screen', {
+        meshPosition: {
+            value: [0, -2, 7],
+            step: 0.1
+        },
+        meshRotation: {
+            value: [-0.3, 0, 0],
+            step: 0.1
+        },
+        meshScale: {
+            value: [2, 2.5, 1],
+            step: 0.1
+        },
+        htmlPosition: {
+            value: [0, 2.6, 0.1],
+            step: 0.1
+        },
+        htmlRotation: {
+            value: [-0.7, 0, 0],
+            step: 0.1
+        }
+    });
+
+    return (
+        <Hud renderPriority={100000000}> <mesh
+            position={meshPosition}
+            rotation={meshRotation}
+            scale={meshScale}
+        >
+            <planeGeometry args={[20, 20]} />
+            <meshBasicMaterial side={THREE.DoubleSide} color="#0A1944" />
+            <Html
+                transform
+                occlude="raycast"
+                position={htmlPosition}
+                rotation={htmlRotation}
+                scale={0.2}
+            >
+                {!showStartButton && <span className="loader"></span>}
+                {showStartButton && <button className="start-button" onClick={onStartClick}>Start</button>}
+            </Html>
+        </mesh></Hud>
+    );
+};
+
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [showStartButton, setShowStartButton] = useState(false);
+    const [sceneLoaded, setSceneLoaded] = useState(false);
 
     const { colors } = useTheme();
 
@@ -39,6 +96,16 @@ const Wrapper = () => {
 
         window.addEventListener('navigationZoomChanged', handleZoomChanged);
         return () => window.removeEventListener('navigationZoomChanged', handleZoomChanged);
+    }, []);
+
+    // Listen for scene loaded event
+    useEffect(() => {
+        const handleSceneLoaded = () => {
+            setShowStartButton(true);
+        };
+
+        window.addEventListener('sceneLoaded', handleSceneLoaded);
+        return () => window.removeEventListener('sceneLoaded', handleSceneLoaded);
     }, []);
     return (
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -79,9 +146,18 @@ const Wrapper = () => {
                 performance={{ min: 0.5 }}
             >
                 {/* <Perf style={{ zIndex: 100000000 }} position="top-left" /> */}
+                {!sceneLoaded && <LoadingScreen
+                    showStartButton={showStartButton}
+                    onStartClick={() => {
+                        setSceneLoaded(true);
+                        window.dispatchEvent(new CustomEvent('sceneLoaded'));
+                    }}
+                />}
+
                 <Suspense fallback={<></>}>
-                    <LazyScene />
+                    <LazyScene sceneLoaded={sceneLoaded} />
                 </Suspense>
+
             </Canvas>
             <EscapeButton isVisible={isZoomed} />
         </div>

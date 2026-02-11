@@ -1,5 +1,5 @@
-import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
-import { memo } from "react";
+import { OrbitControls, Environment, BakeShadows, useProgress } from "@react-three/drei";
+import { memo, useRef, useEffect } from "react";
 import React from "react";
 import Light from "./Light";
 import useFrustumCulling from "../hooks/useFrustumCulling";
@@ -8,8 +8,23 @@ import PostProcess from "./PostProcess";
 import { NavigationProvider, useNavigationContext } from "../context/NavigationContext.tsx";
 import useNavigation from "../hooks/useNavigation";
 import Room from "./Room.tsx";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { useThree } from "@react-three/fiber";
 
-const Scene = memo(() => {
+const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
+    const { controls } = useThree();
+    const orbitControls = controls as OrbitControlsImpl;
+
+    useEffect(() => {
+        if (orbitControls && !sceneLoaded) {
+            orbitControls.enabled = false;
+            orbitControls.enableDamping = false;
+        }
+        if (orbitControls && sceneLoaded) {
+            orbitControls.enabled = true;
+            orbitControls.enableDamping = true;
+        }
+    }, [orbitControls, sceneLoaded])
     return (
         <>
             {/* OrbitControls must be before NavigationProvider so controls are available */}
@@ -38,6 +53,18 @@ const SceneContent = memo(() => {
     const lights = useSceneLights();
     const { flyBackToOriginalPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
+    const { progress } = useProgress();
+    const hasEmitted = useRef(false);
+
+    // Track progress and emit event when complete
+    useEffect(() => {
+        if (progress === 100 && !hasEmitted.current) {
+            hasEmitted.current = true;
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('sceneLoaded'));
+            }, 1500);
+        }
+    }, [progress]);
 
     // Listen for flyBack event
     React.useEffect(() => {

@@ -177,29 +177,39 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const scrollContainerRef2 = useRef<HTMLDivElement>(null);
     const logoRef = useRef<HTMLImageElement>(null);
 
-    const [showIntro, setShowIntro] = useState(true);
+    const [showIntro, setShowIntro] = useState(false);
     const [contentOpacity, setContentOpacity] = useState(0);
 
     const { play: playNetflixSound, cleanup: cleanupNetflixSound } = useAudioManager(AudioType.NETFLIX, 2500);
+    const timersRef = useRef<{ soundTimer?: ReturnType<typeof setTimeout>; introTimer?: ReturnType<typeof setTimeout>; fadeTimer?: ReturnType<typeof setTimeout> }>({});
 
+    // Listen for sceneLoaded event to start the intro animation
     useEffect(() => {
-        // Play sound after a brief delay
-        const soundTimer = setTimeout(() => {
-            playNetflixSound();
-        }, 500);
+        const handleSceneLoaded = () => {
+            setShowIntro(true);
 
-        // Hide intro and fade in content after GIF duration (typically 3-4 seconds)
-        const introTimer = setTimeout(() => {
-            setShowIntro(false);
-            // Start fading in the content
-            setTimeout(() => {
-                setContentOpacity(1);
-            }, 100);
-        }, 2500);
+            // Play sound after a brief delay
+            timersRef.current.soundTimer = setTimeout(() => {
+                playNetflixSound();
+            }, 500);
 
+            // Hide intro and fade in content after GIF duration (typically 3-4 seconds)
+            timersRef.current.introTimer = setTimeout(() => {
+                setShowIntro(false);
+                // Start fading in the content
+                timersRef.current.fadeTimer = setTimeout(() => {
+                    setContentOpacity(1);
+                }, 100);
+            }, 2500);
+        };
+
+        window.addEventListener('sceneLoaded', handleSceneLoaded);
         return () => {
-            clearTimeout(soundTimer);
-            clearTimeout(introTimer);
+            window.removeEventListener('sceneLoaded', handleSceneLoaded);
+            // Cleanup timers
+            if (timersRef.current.soundTimer) clearTimeout(timersRef.current.soundTimer);
+            if (timersRef.current.introTimer) clearTimeout(timersRef.current.introTimer);
+            if (timersRef.current.fadeTimer) clearTimeout(timersRef.current.fadeTimer);
             cleanupNetflixSound();
         };
     }, [playNetflixSound, cleanupNetflixSound]);
