@@ -2,7 +2,7 @@ import { useGLTF } from '@react-three/drei'
 import { memo } from 'react'
 
 const Shelf = memo(function Shelf(props: any) {
-    const { nodes, materials } = useGLTF('/Models/Shelf_5.glb') as any;
+    const { nodes, materials } = useGLTF('/models/Shelf.glb') as any;
     return (
         <group {...props} dispose={null}>
             <group rotation={[-Math.PI / 2, 0, 0]} scale={0.45}>
@@ -104,4 +104,4 @@ Shelf.displayName = 'Shelf';
 
 export default Shelf;
 
-useGLTF.preload('/Models/Shelf_5.glb', true);
+useGLTF.preload('/models/Shelf.glb', true);

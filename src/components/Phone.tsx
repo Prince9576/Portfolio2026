@@ -9,7 +9,7 @@ import { PHONE_CAMERA_VIEW } from "../constants";
 import gsap from "gsap";
 
 const Phone = memo(() => {
-    const { nodes, materials } = useGLTF('/Models/phone.glb', true) as any;
+    const { nodes, materials } = useGLTF('/models/phone.glb', true) as any;
     const { flyToPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
     const phoneGroupRef = useRef<THREE.Group>(null);
@@ -165,4 +165,4 @@ Phone.displayName = 'Phone';
 
 export default Phone;
 
-useGLTF.preload('/Models/phone.glb', true);
+useGLTF.preload('/models/phone.glb', true);

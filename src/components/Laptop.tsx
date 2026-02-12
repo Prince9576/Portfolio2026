@@ -10,7 +10,7 @@ import { useNavigationContext } from "../context/NavigationContext";
 const Laptop = memo((props: any) => {
     const { flyToPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
-    const { nodes, materials } = useGLTF('/Models/mac-draco.glb', true) as any;
+    const { nodes, materials } = useGLTF('/models/mac-draco.glb', true) as any;
     const groupRef = useRef<THREE.Group>(null);
     const { on3DPointerOver, on3DPointerOut, onHtmlMouseEnter, onHtmlMouseLeave } = useOutline(groupRef);
 
@@ -63,6 +63,6 @@ const Laptop = memo((props: any) => {
 
 Laptop.displayName = 'Laptop';
 
-useGLTF.preload('/Models/mac-draco.glb', true);
+useGLTF.preload('/models/mac-draco.glb', true);
 
 export default Laptop;
