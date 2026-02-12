@@ -13,7 +13,7 @@ const Wrapper = () => {
     const [sceneLoaded, setSceneLoaded] = useState(false);
 
     const { colors } = useTheme();
-    const { play: playButtonClick } = useAudioManager(AudioType.BUTTON_CLICK, 300);
+    const { play: playButtonClick } = useAudioManager(AudioType.BUTTON_CLICK, 500);
 
     useEffect(() => {
         const handleZoomChanged = (e: Event) => {
