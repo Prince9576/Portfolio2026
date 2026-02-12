@@ -4,13 +4,26 @@ import useTheme from "../hooks/useTheme";
 import { lazy, Suspense, useRef, useState, useEffect } from "react";
 // import { Perf } from "r3f-perf";
 import EscapeButton from "./EscapeButton";
-import { Html } from "@react-three/drei";
+import { Html, useProgress } from "@react-three/drei";
 
 
 
 
-// Loading screen component with Leva controls
+// Loading screen component with progress tracking
 const LoadingScreen = ({ showStartButton, onStartClick }: { showStartButton: boolean; onStartClick: () => void }) => {
+    const { progress } = useProgress();
+    const hasEmitted = useRef(false);
+
+    // Track progress and emit event when complete
+    useEffect(() => {
+        if (progress === 100 && !hasEmitted.current) {
+            hasEmitted.current = true;
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('sceneLoaded'));
+            }, 1500);
+        }
+    }, [progress]);
+
     return (
         <mesh
             position={[0, -2, 7]}
@@ -64,6 +77,7 @@ const Wrapper = () => {
         window.addEventListener('sceneLoaded', handleSceneLoaded);
         return () => window.removeEventListener('sceneLoaded', handleSceneLoaded);
     }, []);
+
     return (
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
             {/* CSS3D Container - rendered ABOVE WebGL canvas */}

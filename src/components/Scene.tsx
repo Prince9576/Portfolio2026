@@ -1,5 +1,5 @@
-import { OrbitControls, Environment, BakeShadows, useProgress } from "@react-three/drei";
-import { memo, useRef, useEffect } from "react";
+import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
+import { memo, useEffect } from "react";
 import React from "react";
 import Light from "./Light";
 import useFrustumCulling from "../hooks/useFrustumCulling";
@@ -53,18 +53,6 @@ const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
     const lights = useSceneLights();
     const { flyBackToOriginalPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
-    const { progress } = useProgress();
-    const hasEmitted = useRef(false);
-
-    // Track progress and emit event when complete
-    useEffect(() => {
-        if (progress === 100 && !hasEmitted.current) {
-            hasEmitted.current = true;
-            setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('sceneLoaded'));
-            }, 1500);
-        }
-    }, [progress]);
 
     // Listen for flyBack event
     React.useEffect(() => {
