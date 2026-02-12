@@ -1,7 +1,7 @@
-import Wrapper from "./components/Wrapper"
+import Wrapper from "./components/Wrapper";
 
 const App = () => {
-  return <Wrapper />
-}
+  return <Wrapper />;
+};
 
-export default App
+export default App;
