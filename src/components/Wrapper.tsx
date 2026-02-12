@@ -4,6 +4,7 @@ import useTheme from "../hooks/useTheme";
 import { lazy, Suspense, useRef, useState, useEffect } from "react";
 import EscapeButton from "./EscapeButton";
 import LoadingScreen from "./LoadingScreen";
+import useAudioManager, { AudioType } from "../hooks/useAudioManager";
 
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
@@ -12,6 +13,7 @@ const Wrapper = () => {
     const [sceneLoaded, setSceneLoaded] = useState(false);
 
     const { colors } = useTheme();
+    const { play: playButtonClick } = useAudioManager(AudioType.BUTTON_CLICK, 300);
 
     useEffect(() => {
         const handleZoomChanged = (e: Event) => {
@@ -76,6 +78,7 @@ const Wrapper = () => {
                 {!sceneLoaded && <LoadingScreen
                     showStartButton={showStartButton}
                     onStartClick={() => {
+                        playButtonClick();
                         setSceneLoaded(true);
                         window.dispatchEvent(new CustomEvent('sceneLoaded'));
                     }}

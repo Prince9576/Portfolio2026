@@ -5,6 +5,7 @@ export const AudioType = {
     ZOOM_IN: 'zoom_in',
     ZOOM_OUT: 'zoom_out',
     NETFLIX: 'netflix',
+    BUTTON_CLICK: 'button_click',
 } as const;
 
 export type AudioType = typeof AudioType[keyof typeof AudioType];
@@ -14,6 +15,7 @@ const AUDIO_SRC: Record<AudioType, string> = {
     [AudioType.ZOOM_IN]: '/sounds/zoom.mp3',
     [AudioType.ZOOM_OUT]: '/sounds/zoom.mp3',
     [AudioType.NETFLIX]: '/sounds/netflix.mp3',
+    [AudioType.BUTTON_CLICK]: '/sounds/button_click.mp3',
 };
 
 const useAudioManager = (type: AudioType, duration: number = 1000) => {
