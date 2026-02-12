@@ -66,6 +66,18 @@ const useAudioManager = (
         }
     }, [getAudio, duration]);
 
+    const pause = useCallback(() => {
+        if (audioRef.current && !audioRef.current.paused) {
+            audioRef.current.pause();
+        }
+    }, []);
+
+    const resume = useCallback(() => {
+        if (audioRef.current && audioRef.current.paused) {
+            audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+        }
+    }, []);
+
     const cleanup = useCallback(() => {
         if (timerRef.current) {
             clearTimeout(timerRef.current);
@@ -77,7 +89,7 @@ const useAudioManager = (
         }
     }, []);
 
-    return { play, cleanup };
+    return { play, pause, resume, cleanup };
 };
 
 export default useAudioManager;

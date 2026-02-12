@@ -179,7 +179,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const [contentOpacity, setContentOpacity] = useState(0);
 
     const { play: playNetflixSound, cleanup: cleanupNetflixSound } = useAudioManager(AudioType.NETFLIX, 2500);
-    const { play: playBackgroundMusic, cleanup: cleanupBackgroundMusic } = useAudioManager(AudioType.BACKGROUND, 0, { loop: true, volume: 0.1 });
+    const { play: playBackgroundMusic, pause: pauseBackgroundMusic, resume: resumeBackgroundMusic, cleanup: cleanupBackgroundMusic } = useAudioManager(AudioType.BACKGROUND, 0, { loop: true, volume: 0.1 });
     const timersRef = useRef<{ soundTimer?: ReturnType<typeof setTimeout>; introTimer?: ReturnType<typeof setTimeout>; fadeTimer?: ReturnType<typeof setTimeout>; bgMusicTimer?: ReturnType<typeof setTimeout> }>({});
     const bgMusicPlayedRef = useRef(false);
 
@@ -218,6 +218,31 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
             bgMusicPlayedRef.current = false;
         };
     }, [playNetflixSound, cleanupNetflixSound, playBackgroundMusic, cleanupBackgroundMusic]);
+
+    useEffect(() => {
+        const handleToggleMuted = (event: Event) => {
+            const customEvent = event as CustomEvent<{ isMuted: boolean }>;
+            const { isMuted } = customEvent.detail;
+
+            if (isMuted) {
+                // If muted (isMuted = true), pause the music
+                pauseBackgroundMusic();
+            } else {
+                // If not muted (isMuted = false), play/resume the music
+                if (bgMusicPlayedRef.current) {
+                    resumeBackgroundMusic();
+                } else {
+                    playBackgroundMusic();
+                    bgMusicPlayedRef.current = true;
+                }
+            }
+        };
+
+        window.addEventListener('toggleMuted', handleToggleMuted);
+        return () => {
+            window.removeEventListener('toggleMuted', handleToggleMuted);
+        };
+    }, [playBackgroundMusic, pauseBackgroundMusic, resumeBackgroundMusic]);
 
     const handleContainerClick = useCallback(() => {
         onScreenClick?.();

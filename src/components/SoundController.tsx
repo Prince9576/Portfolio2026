@@ -1,8 +1,17 @@
 import { Volume2, VolumeX } from "lucide-react";
+import { useState } from "react";
 
 const SoundController = () => {
+    const [isMuted, setIsMuted] = useState(false);
+
+    const handleClick = () => {
+        const newMutedState = !isMuted;
+        setIsMuted(newMutedState);
+        window.dispatchEvent(new CustomEvent('toggleMuted', { detail: { isMuted: newMutedState } }));
+    };
+
     return (
-        <button style={{
+        <button onClick={handleClick} style={{
             position: 'fixed',
             bottom: '20px',
             right: '20px',
@@ -22,7 +31,7 @@ const SoundController = () => {
             justifyContent: 'center',
             transition: 'all 0.3s ease'
         }}>
-            <VolumeX />
+            {isMuted ? <VolumeX /> : <Volume2 />}
         </button>
     )
 }
