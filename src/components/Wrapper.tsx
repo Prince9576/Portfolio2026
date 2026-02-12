@@ -5,6 +5,7 @@ import { lazy, Suspense, useRef, useState, useEffect } from "react";
 import EscapeButton from "./EscapeButton";
 import LoadingScreen from "./LoadingScreen";
 import useAudioManager, { AudioType } from "../hooks/useAudioManager";
+import SoundController from "./SoundController";
 
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
@@ -86,6 +87,7 @@ const Wrapper = () => {
 
             </Canvas>
             <EscapeButton isVisible={isZoomed} />
+            {sceneLoaded && <SoundController />}
         </div>
     )
 }
