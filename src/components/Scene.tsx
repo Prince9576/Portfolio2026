@@ -10,6 +10,7 @@ import useNavigation from "../hooks/useNavigation";
 import Room from "./Room.tsx";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useThree } from "@react-three/fiber";
+import useMobilePortrait from "../hooks/useMobilePortrait";
 
 const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
     const { controls } = useThree();
@@ -49,6 +50,7 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
 
 const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
     useFrustumCulling();
+    const isMobilePortrait = useMobilePortrait();
 
     const lights = useSceneLights();
     const { flyBackToOriginalPosition } = useNavigation();
@@ -78,7 +80,7 @@ const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
 
             <Light lights={lights} showHelpers={false} />
 
-            <Room scale={sceneLoaded ? 1.05 : 0} />
+            <Room scale={sceneLoaded ? (isMobilePortrait ? 0.75 : 1.05) : 0} />
 
             <BakeShadows />
         </PostProcess>

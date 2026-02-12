@@ -7,6 +7,7 @@ import LoadingScreen from "./LoadingScreen";
 import useAudioManager, { AudioType } from "../hooks/useAudioManager";
 import SoundController from "./SoundController";
 import { BG_START_TIME } from "../constants";
+import useMobilePortrait from "../hooks/useMobilePortrait";
 
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +19,7 @@ const Wrapper = () => {
 
     const { colors } = useTheme();
     const { play: playButtonClick } = useAudioManager(AudioType.BUTTON_CLICK, 500);
+    const isMobilePortrait = useMobilePortrait();
 
     useEffect(() => {
         const handleZoomChanged = (e: Event) => {
@@ -74,10 +76,10 @@ const Wrapper = () => {
                     powerPreference: 'high-performance',
                 }}
                 camera={{
-                    position: [0, 7.5, 10],
+                    position: isMobilePortrait ? [0, 8, 12] : [0, 7.5, 10],
                     near: 0.1,
                     far: 100,
-                    fov: 50,
+                    fov: isMobilePortrait ? 60 : 50,
                 }}
                 style={{ backgroundColor: colors.common.black }}
                 dpr={[1, 2]}
