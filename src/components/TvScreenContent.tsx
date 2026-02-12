@@ -179,7 +179,9 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const [contentOpacity, setContentOpacity] = useState(0);
 
     const { play: playNetflixSound, cleanup: cleanupNetflixSound } = useAudioManager(AudioType.NETFLIX, 2500);
-    const timersRef = useRef<{ soundTimer?: ReturnType<typeof setTimeout>; introTimer?: ReturnType<typeof setTimeout>; fadeTimer?: ReturnType<typeof setTimeout> }>({});
+    const { play: playBackgroundMusic, cleanup: cleanupBackgroundMusic } = useAudioManager(AudioType.BACKGROUND, 0, { loop: true, volume: 0.1 });
+    const timersRef = useRef<{ soundTimer?: ReturnType<typeof setTimeout>; introTimer?: ReturnType<typeof setTimeout>; fadeTimer?: ReturnType<typeof setTimeout>; bgMusicTimer?: ReturnType<typeof setTimeout> }>({});
+    const bgMusicPlayedRef = useRef(false);
 
     useEffect(() => {
         const handleSceneLoaded = () => {
@@ -195,6 +197,13 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     setContentOpacity(1);
                 }, 100);
             }, 2500);
+
+            timersRef.current.bgMusicTimer = setTimeout(() => {
+                if (!bgMusicPlayedRef.current) {
+                    bgMusicPlayedRef.current = true;
+                    playBackgroundMusic();
+                }
+            }, 3600);
         };
 
         window.addEventListener('sceneLoaded', handleSceneLoaded);
@@ -203,9 +212,12 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
             if (timersRef.current.soundTimer) clearTimeout(timersRef.current.soundTimer);
             if (timersRef.current.introTimer) clearTimeout(timersRef.current.introTimer);
             if (timersRef.current.fadeTimer) clearTimeout(timersRef.current.fadeTimer);
+            if (timersRef.current.bgMusicTimer) clearTimeout(timersRef.current.bgMusicTimer);
             cleanupNetflixSound();
+            cleanupBackgroundMusic();
+            bgMusicPlayedRef.current = false;
         };
-    }, [playNetflixSound, cleanupNetflixSound]);
+    }, [playNetflixSound, cleanupNetflixSound, playBackgroundMusic, cleanupBackgroundMusic]);
 
     const handleContainerClick = useCallback(() => {
         onScreenClick?.();
@@ -238,6 +250,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     }}
                 >
                     <img
+                        key="netflix-intro"
                         src="images/netflix_intro.gif"
                         alt="Netflix Intro"
                         style={{

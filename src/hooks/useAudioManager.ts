@@ -6,6 +6,7 @@ export const AudioType = {
     ZOOM_OUT: 'zoom_out',
     NETFLIX: 'netflix',
     BUTTON_CLICK: 'button_click',
+    BACKGROUND: 'background',
 } as const;
 
 export type AudioType = typeof AudioType[keyof typeof AudioType];
@@ -16,27 +17,53 @@ const AUDIO_SRC: Record<AudioType, string> = {
     [AudioType.ZOOM_OUT]: '/sounds/zoom.mp3',
     [AudioType.NETFLIX]: '/sounds/netflix.mp3',
     [AudioType.BUTTON_CLICK]: '/sounds/button_click.mp3',
+    [AudioType.BACKGROUND]: '/sounds/bg.mp3',
 };
 
-const useAudioManager = (type: AudioType, duration: number = 1000) => {
+const useAudioManager = (
+    type: AudioType,
+    duration: number = 1000,
+    options?: { loop?: boolean; volume?: number }
+) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const optionsRef = useRef(options);
+
+    // Update options ref when options change
+    if (options) {
+        optionsRef.current = options;
+    }
 
     const getAudio = useCallback(() => {
         if (!audioRef.current) {
             audioRef.current = new Audio(AUDIO_SRC[type]);
+            // Set loop and volume only when audio is first created
+            if (optionsRef.current?.loop !== undefined) {
+                audioRef.current.loop = optionsRef.current.loop;
+            }
+            if (optionsRef.current?.volume !== undefined) {
+                audioRef.current.volume = optionsRef.current.volume;
+            }
         }
         return audioRef.current;
     }, [type]);
 
     const play = useCallback(() => {
         const audio = getAudio();
-        audio.currentTime = 0;
+
+        // Only reset currentTime if audio is not already playing
+        if (audio.paused) {
+            audio.currentTime = 0;
+        }
+
         audio.play().catch(err => console.log('Audio play failed:', err));
-        timerRef.current = setTimeout(() => {
-            audio.pause();
-            timerRef.current = null;
-        }, duration);
+
+        if (!optionsRef.current?.loop && duration > 0) {
+            timerRef.current = setTimeout(() => {
+                audio.pause();
+                timerRef.current = null;
+            }, duration);
+        }
     }, [getAudio, duration]);
 
     const cleanup = useCallback(() => {
