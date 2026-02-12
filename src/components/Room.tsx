@@ -11,13 +11,13 @@ import Tv from './Tv';
 import Phone from './Phone';
 
 
-const Main = memo(() => {
+const Main = memo((props: { scale: number }) => {
 
     /* Base */
     const { nodes, materials } = useGLTF('/Models/gaming_raw6.glb', true) as any;
     const position = [-0.72, -2, 0] as [number, number, number];
     const rotation = [-0.35, -1.07, -0.04] as [number, number, number];
-    const scale = 1.05;
+    const scale = props.scale;
 
     /* Refs */
     const guitarRef = useRef<THREE.Mesh>(null);

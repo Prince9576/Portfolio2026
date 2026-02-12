@@ -40,13 +40,13 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
                 enablePan={false}
             />
             <NavigationProvider>
-                <SceneContent />
+                <SceneContent sceneLoaded={sceneLoaded} />
             </NavigationProvider>
         </>
     )
 });
 
-const SceneContent = memo(() => {
+const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
     // Enable frustum culling for performance
     useFrustumCulling();
 
@@ -95,7 +95,7 @@ const SceneContent = memo(() => {
             {/* All lights configured */}
             <Light lights={lights} showHelpers={false} />
 
-            <Room />
+            <Room scale={sceneLoaded ? 1.05 : 0} />
 
             {/* Bake shadows after scene loads for better performance */}
             <BakeShadows />
