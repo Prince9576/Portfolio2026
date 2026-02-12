@@ -27,7 +27,6 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
     }, [orbitControls, sceneLoaded])
     return (
         <>
-            {/* OrbitControls must be before NavigationProvider so controls are available */}
             <OrbitControls
                 makeDefault
                 enableDamping
@@ -47,14 +46,12 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
 });
 
 const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
-    // Enable frustum culling for performance
     useFrustumCulling();
 
     const lights = useSceneLights();
     const { flyBackToOriginalPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
 
-    // Listen for flyBack event
     React.useEffect(() => {
         const handleFlyBack = () => {
             if (isZoomed) {
@@ -66,26 +63,21 @@ const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
         return () => window.removeEventListener('flyBackToOriginal', handleFlyBack);
     }, [isZoomed, flyBackToOriginalPosition]);
 
-    // Emit event when isZoomed changes to update button visibility
     React.useEffect(() => {
         window.dispatchEvent(new CustomEvent('navigationZoomChanged', { detail: { isZoomed } }));
     }, [isZoomed]);
 
     return (
         <PostProcess>
-            {/* Dark background like Blender */}
             <color attach="background" args={['#0a0f1e']} />
             <fog attach="fog" args={['#0a0f1e', 10, 30]} />
 
-            {/* Reduced environment for subtle reflections only */}
             <Environment preset="night" environmentIntensity={0.1} />
 
-            {/* All lights configured */}
             <Light lights={lights} showHelpers={false} />
 
             <Room scale={sceneLoaded ? 1.05 : 0} />
 
-            {/* Bake shadows after scene loads for better performance */}
             <BakeShadows />
         </PostProcess>
     )

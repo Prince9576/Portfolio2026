@@ -2,7 +2,6 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Briefcase, Code, Trophy, Zap, Star, Target, Award, TrendingUp } from 'lucide-react';
 import useAudioManager, { AudioType } from '../hooks/useAudioManager';
 
-// Extract static styles
 const CONTAINER_STYLE: React.CSSProperties = {
     width: '100%',
     height: '100%',
@@ -209,13 +208,10 @@ const WorkEx = memo(() => {
             setCollectedSkills(new Set([...collectedSkills, skill]));
             setXpPoints(prev => Math.min(prev + 100, totalXP));
 
-            // Play sound effect
             play();
 
-            // Trigger animation on the absolute positioned star
             setAnimatingSkill(skill);
 
-            // Remove animation after it completes (1s)
             setTimeout(() => {
                 setAnimatingSkill(null);
             }, 1000);
@@ -234,13 +230,11 @@ const WorkEx = memo(() => {
 
     return (
         <div ref={containerRef} style={CONTAINER_STYLE}>
-            {/* Animated Background */}
             <div style={{
                 ...BACKGROUND_GRADIENT_STYLE,
                 transform: `translateY(${scrollY * 0.3}px)`
             }} />
 
-            {/* Floating Particles */}
             <div style={PARTICLES_CONTAINER_STYLE}>
                 {[...Array(8)].map((_, i) => (
                     <div
@@ -255,7 +249,6 @@ const WorkEx = memo(() => {
                 ))}
             </div>
 
-            {/* Header Section */}
             <div style={{
                 ...HEADER_SECTION_STYLE,
                 transform: `translateY(${scrollY * -0.5}px)`
@@ -269,7 +262,6 @@ const WorkEx = memo(() => {
                     6 years of crafting exceptional digital experiences. Collect skills along the way!
                 </p>
 
-                {/* XP Bar */}
                 <div style={XP_BAR_CONTAINER_STYLE}>
                     <div style={{
                         display: 'flex',
@@ -306,12 +298,9 @@ const WorkEx = memo(() => {
                 </div>
             </div>
 
-            {/* Timeline Container */}
             <div style={TIMELINE_CONTAINER_STYLE}>
-                {/* Vertical Timeline Line - Left Aligned */}
                 <div style={TIMELINE_LINE_STYLE} />
 
-                {/* Timeline Nodes - Fixed on the line */}
                 {experiences.map((exp, index) => {
                     const nodeTopPosition = 40 + (index * 650) + 50;
 
@@ -336,7 +325,6 @@ const WorkEx = memo(() => {
                     );
                 })}
 
-                {/* Experience Cards */}
                 {experiences.map((exp, index) => {
                     const parallaxOffset = (scrollY - (index * 600)) * 0.05;
                     const isHovered = hoveredCard === exp.id;
@@ -352,7 +340,6 @@ const WorkEx = memo(() => {
                                 transition: 'transform 0.3s ease-out'
                             }}
                         >
-                            {/* Card */}
                             <div
                                 onMouseEnter={() => handleCardMouseEnter(exp.id)}
                                 onMouseLeave={handleCardMouseLeave}
@@ -367,7 +354,6 @@ const WorkEx = memo(() => {
                                         : '0 10px 30px rgba(0,0,0,0.3)'
                                 }}
                             >
-                                {/* Gradient Overlay */}
                                 <div style={{
                                     position: 'absolute',
                                     top: 0,
@@ -377,7 +363,6 @@ const WorkEx = memo(() => {
                                     background: `linear-gradient(90deg, ${exp.color} 0%, transparent 100%)`
                                 }} />
 
-                                {/* Header */}
                                 <div style={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -385,7 +370,6 @@ const WorkEx = memo(() => {
                                     marginBottom: '20px'
                                 }}>
                                     <div style={{ flex: 1 }}>
-                                        {/* Company Logo */}
                                         <div style={{
                                             marginBottom: '15px',
                                             display: 'flex',
@@ -430,7 +414,6 @@ const WorkEx = memo(() => {
                                         </p>
                                     </div>
 
-                                    {/* XP Badge */}
                                     <div style={{
                                         backgroundColor: exp.color,
                                         color: '#fff',
@@ -449,7 +432,6 @@ const WorkEx = memo(() => {
                                     </div>
                                 </div>
 
-                                {/* Achievements */}
                                 <div style={{ marginBottom: '20px' }}>
                                     <div style={{
                                         display: 'flex',
@@ -481,7 +463,6 @@ const WorkEx = memo(() => {
                                     </ul>
                                 </div>
 
-                                {/* Skills */}
                                 <div>
                                     <div style={{
                                         display: 'flex',
@@ -520,7 +501,6 @@ const WorkEx = memo(() => {
                                     </div>
                                 </div>
 
-                                {/* Hover Effect Glow */}
                                 {isHovered && (
                                     <div style={{
                                         position: 'absolute',
@@ -540,7 +520,6 @@ const WorkEx = memo(() => {
                 })}
             </div>
 
-            {/* Achievement Summary */}
             <div style={{
                 padding: '40px',
                 textAlign: 'center',
@@ -585,7 +564,6 @@ const WorkEx = memo(() => {
                 </div>
             </div>
 
-            {/* Animations */}
             <style>{`
                 @keyframes pulse {
                     0%, 100% {
@@ -629,7 +607,6 @@ const WorkEx = memo(() => {
 
 WorkEx.displayName = 'WorkEx';
 
-// Extracted sub-components for better performance
 const SkillButton = memo(({
     skill,
     isCollected,

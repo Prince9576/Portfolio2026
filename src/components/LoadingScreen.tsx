@@ -6,7 +6,6 @@ const LoadingScreen = ({ showStartButton, onStartClick }: { showStartButton: boo
     const { progress } = useProgress();
     const hasEmitted = useRef(false);
 
-    // Track progress and emit event when complete
     useEffect(() => {
         if (progress === 100 && !hasEmitted.current) {
             hasEmitted.current = true;

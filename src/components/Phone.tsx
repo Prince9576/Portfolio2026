@@ -7,9 +7,6 @@ import { useNavigationContext } from "../context/NavigationContext";
 import useNavigation from "../hooks/useNavigation";
 import { PHONE_CAMERA_VIEW } from "../constants";
 import gsap from "gsap";
-// import { useControls } from 'leva';
-// import { useThree, useFrame } from '@react-three/fiber';
-// import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 const Phone = memo(() => {
     const { nodes, materials } = useGLTF('/Models/phone.glb', true) as any;
@@ -36,32 +33,6 @@ const Phone = memo(() => {
             zoomed: 0.044
         }
     }
-    // const { camera, controls } = useThree();
-    // const orbitControls = controls as OrbitControlsImpl;
-
-    // const { posX, posY, posZ, targetX, targetY, targetZ, rotX, rotY, rotZ, rotW } = useControls('Phone Camera', {
-    //     posX: { value: PHONE_CAMERA_VIEW.position.x, min: -10, max: 10, step: 0.1 },
-    //     posY: { value: PHONE_CAMERA_VIEW.position.y, min: -10, max: 10, step: 0.1 },
-    //     posZ: { value: PHONE_CAMERA_VIEW.position.z, min: -10, max: 10, step: 0.1 },
-    //     targetX: { value: PHONE_CAMERA_VIEW.target.x, min: -10, max: 10, step: 0.1 },
-    //     targetY: { value: PHONE_CAMERA_VIEW.target.y, min: -10, max: 10, step: 0.1 },
-    //     targetZ: { value: PHONE_CAMERA_VIEW.target.z, min: -10, max: 10, step: 0.1 },
-    //     rotX: { value: PHONE_CAMERA_VIEW.rotation.x, min: -1, max: 1, step: 0.01 },
-    //     rotY: { value: PHONE_CAMERA_VIEW.rotation.y, min: -1, max: 1, step: 0.01 },
-    //     rotZ: { value: PHONE_CAMERA_VIEW.rotation.z, min: -1, max: 1, step: 0.01 },
-    //     rotW: { value: PHONE_CAMERA_VIEW.rotation.w, min: -1, max: 1, step: 0.01 },
-    // });
-
-    // useFrame(() => {
-    //     camera.position.set(posX, posY, posZ);
-    //     if (orbitControls) {
-    //         orbitControls.target.set(targetX, targetY, targetZ);
-    //         orbitControls.update();
-    //     }
-    //     const quat = new THREE.Quaternion(rotX, rotY, rotZ, rotW);
-    //     quat.normalize();
-    //     camera.quaternion.copy(quat);
-    // });
 
     const handleIconPointerEnter = useCallback((icon: 'instagram' | 'linkedin' | 'github') => {
         const ref = icon === 'instagram' ? instagramRef : icon === 'linkedin' ? linkedinRef : githubRef;
@@ -92,7 +63,7 @@ const Phone = memo(() => {
     }, []);
 
     const handleIconClick = useCallback((icon: 'instagram' | 'linkedin' | 'github', e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation(); // Prevent triggering the phone group click
+        e.stopPropagation();
         const urls = {
             instagram: 'https://www.instagram.com/',
             linkedin: 'https://www.linkedin.com/',

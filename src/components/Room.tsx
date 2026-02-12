@@ -13,16 +13,13 @@ import Phone from './Phone';
 
 const Main = memo((props: { scale: number }) => {
 
-    /* Base */
     const { nodes, materials } = useGLTF('/Models/gaming_raw6.glb', true) as any;
     const position = [-0.72, -2, 0] as [number, number, number];
     const rotation = [-0.35, -1.07, -0.04] as [number, number, number];
     const scale = props.scale;
 
-    /* Refs */
     const guitarRef = useRef<THREE.Mesh>(null);
     const wallFrameRef = useRef<THREE.Mesh>(null);
-    /* Hooks */
     const guitarSpotlight = useGuitarSpotlight(guitarRef);
     const wallFrameSpotlight = useWallFrameSpotlight(wallFrameRef);
 
@@ -65,7 +62,6 @@ const Main = memo((props: { scale: number }) => {
                     geometry={nodes.corona_beer_2.geometry}
                     material={materials.corona_berr_liquid}
                 />
-                {/* <pointLight position-y={-0.01} intensity={0.05} color="rgb(0.6, 0.5, 1.0" /> */}
             </group>
             <group position={[2.945, 0.433, 1.156]} scale={[0.459, 0.404, 0.459]}>
                 <mesh
@@ -255,60 +251,9 @@ const Main = memo((props: { scale: number }) => {
             <group
                 castShadow
                 receiveShadow
-                // geometry={nodes.Dvd_Player.geometry}
-                // material={materials['DVD Player']}
                 position={[-0.063, 0.975, -3.27]}
                 rotation={[0, -Math.PI / 2, -Math.PI / 2]}
                 scale={[1, 1, 1]}>
-                {/* <primitive object={ps5Scene} /> */}
-                {/* <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_050_001.geometry}
-                    material={materials['Soundbar Foam']}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_051_001.geometry}
-                    material={materials.pesdvdpeq}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_052_001.geometry}
-                    material={materials.logodvd}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_053_001.geometry}
-                    material={materials['DVD Player']}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_054_001.geometry}
-                    material={materials['DVD Player']}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_056_001.geometry}
-                    material={materials.pesdvdpeq}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_057_001.geometry}
-                    material={materials['DVD Player']}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Arch35_058_001.geometry}
-                    material={materials.pesdvdpeq}
-                /> */}
             </group>
             <group>
                 <mesh

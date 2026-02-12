@@ -1,18 +1,12 @@
 import { useMemo } from "react";
 
-/**
- * Custom hook for main scene lighting
- * Just a refactor - exact same values as before
- */
 const useSceneLights = () => {
     const lights = useMemo(() => {
         return [
-            // Very subtle ambient to prevent pure black shadows
             {
                 type: 'ambientLight',
                 intensity: 0.05
             },
-            // Left rect area light (Purple)
             {
                 type: 'rectAreaLight',
                 position: [-6.5, 2, 6.5] as [number, number, number],
@@ -21,7 +15,6 @@ const useSceneLights = () => {
                 power: 20,
                 size: 3
             },
-            // Left spotlight (Purple)
             {
                 type: 'spotLight',
                 position: [-6.5, 2, 6.5] as [number, number, number],
@@ -31,9 +24,8 @@ const useSceneLights = () => {
                 penumbra: 0.5,
                 distance: 20,
                 decay: 2,
-                castShadow: false  // Disabled to save texture units
+                castShadow: false
             },
-            // Right rect area light (Blue)
             {
                 type: 'rectAreaLight',
                 position: [4, 2, 10] as [number, number, number],
@@ -42,7 +34,6 @@ const useSceneLights = () => {
                 power: 25,
                 size: 3
             },
-            // Right spotlight (Blue)
             {
                 type: 'spotLight',
                 position: [4, 2, 10] as [number, number, number],
@@ -52,9 +43,8 @@ const useSceneLights = () => {
                 penumbra: 0.5,
                 distance: 20,
                 decay: 2,
-                castShadow: false  // Disabled to save texture units
+                castShadow: false
             },
-            // Top spotlight (Light Green/Cyan)
             {
                 type: 'spotLight',
                 position: [0.4, 2.5, -3.8] as [number, number, number],
@@ -66,7 +56,6 @@ const useSceneLights = () => {
                 decay: 2,
                 castShadow: true
             },
-            // Additional spotlight (Blue)
             {
                 type: 'spotLight',
                 position: [-14, 2, 10] as [number, number, number],

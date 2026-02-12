@@ -3,9 +3,9 @@ const TV_SCREEN_SIZE_UNITS = {
     height: 1.56355 * 1.75,
 }
 
-const screenWidth = 1920;   // Pixel resolution
-const screenHeight = Math.round(screenWidth * (TV_SCREEN_SIZE_UNITS.height / TV_SCREEN_SIZE_UNITS.width)); // 1055
-const SCREEN_SCALE = TV_SCREEN_SIZE_UNITS.width / screenWidth; // 0.00148
+const screenWidth = 1920;
+const screenHeight = Math.round(screenWidth * (TV_SCREEN_SIZE_UNITS.height / TV_SCREEN_SIZE_UNITS.width));
+const SCREEN_SCALE = TV_SCREEN_SIZE_UNITS.width / screenWidth;
 
 
 const LAPTOP_CAMERA_VIEW = {

@@ -1,5 +1,4 @@
 import { memo, useRef, useEffect, useLayoutEffect } from "react";
-// import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
 export interface LightConfig {
     type: string;
@@ -36,7 +35,6 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
         }
     }, [light.targetRef, light.targetRef?.current]);
 
-    // Also check periodically in case the ref becomes available later
     useEffect(() => {
         if (!light.targetRef) return;
 
@@ -46,10 +44,8 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
             }
         };
 
-        // Check immediately
         checkTarget();
 
-        // Check again after delays to catch late-mounted refs
         const timeouts = [
             setTimeout(checkTarget, 50),
             setTimeout(checkTarget, 100),
@@ -65,7 +61,6 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
         }
 
         case 'rectAreaLight': {
-            // Make the light look at the center
             useEffect(() => {
                 if (lightRef.current) {
                     lightRef.current.lookAt(0, 0, 0);
@@ -82,9 +77,6 @@ const LightComponent = memo(({ light, showHelpers }: { light: LightConfig; showH
                         width={light.size || 4}
                         height={light.size || 4}
                     />
-                    {/* {showHelpers && lightRef.current && (
-                        <primitive object={new RectAreaLightHelper(lightRef.current)} />
-                    )} */}
                 </group>
             );
         }

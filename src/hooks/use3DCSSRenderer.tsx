@@ -11,7 +11,6 @@ export function useCSS3DRenderer(containerRef: React.RefObject<HTMLDivElement | 
     useEffect(() => {
         if (!containerRef.current) return;
 
-        // Create CSS3D renderer
         const css3DRenderer = new CSS3DRenderer();
         css3DRenderer.setSize(size.width, size.height);
         css3DRenderer.domElement.style.position = 'absolute';
@@ -28,14 +27,11 @@ export function useCSS3DRenderer(containerRef: React.RefObject<HTMLDivElement | 
         };
     }, [containerRef]);
 
-    // Handle resize
     useEffect(() => {
         if (css3DRendererRef.current) {
             css3DRendererRef.current.setSize(size.width, size.height);
         }
     }, [size]);
-
-    // Rendering should be triggered by the caller or useFrame in the component.
 
     return {
         css3DScene: css3DSceneRef.current,

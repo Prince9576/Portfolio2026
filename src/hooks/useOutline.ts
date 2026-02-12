@@ -10,7 +10,6 @@ const useOutline = (groupRef: React.RefObject<THREE.Group | null>) => {
     const selectionApi = useContext(selectionContext);
     const invalidate = useThree((state) => state.invalidate);
 
-    // Collect meshes once on mount
     useEffect(() => {
         if (!groupRef.current) return;
         const meshes: THREE.Object3D[] = [];

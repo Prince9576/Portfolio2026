@@ -2,11 +2,9 @@ import React from "react";
 
 const EscapeButton = ({ isVisible }: { isVisible: boolean }) => {
     const handleClick = () => {
-        // Dispatch custom event
         window.dispatchEvent(new CustomEvent('flyBackToOriginal'));
     };
 
-    // Also handle keyboard ESC key
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape" && isVisible) {

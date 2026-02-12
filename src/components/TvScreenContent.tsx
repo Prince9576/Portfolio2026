@@ -6,7 +6,6 @@ interface TvScreenContentProps {
     onScreenClick?: () => void;
 }
 
-// Extract static styles
 const CONTAINER_STYLE: React.CSSProperties = {
     width: '100%',
     height: '100%',
@@ -157,7 +156,6 @@ const THUMBNAIL_GRADIENT_STYLE: React.CSSProperties = {
     background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.5))'
 };
 
-// Dummy data
 const RECOMMENDATIONS = [
     { id: 1, image: '/images/bb.jpg' },
     { id: 2, image: '/images/dark.jpg' },
@@ -183,20 +181,16 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const { play: playNetflixSound, cleanup: cleanupNetflixSound } = useAudioManager(AudioType.NETFLIX, 2500);
     const timersRef = useRef<{ soundTimer?: ReturnType<typeof setTimeout>; introTimer?: ReturnType<typeof setTimeout>; fadeTimer?: ReturnType<typeof setTimeout> }>({});
 
-    // Listen for sceneLoaded event to start the intro animation
     useEffect(() => {
         const handleSceneLoaded = () => {
             setShowIntro(true);
 
-            // Play sound after a brief delay
             timersRef.current.soundTimer = setTimeout(() => {
                 playNetflixSound();
             }, 500);
 
-            // Hide intro and fade in content after GIF duration (typically 3-4 seconds)
             timersRef.current.introTimer = setTimeout(() => {
                 setShowIntro(false);
-                // Start fading in the content
                 timersRef.current.fadeTimer = setTimeout(() => {
                     setContentOpacity(1);
                 }, 100);
@@ -206,7 +200,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
         window.addEventListener('sceneLoaded', handleSceneLoaded);
         return () => {
             window.removeEventListener('sceneLoaded', handleSceneLoaded);
-            // Cleanup timers
             if (timersRef.current.soundTimer) clearTimeout(timersRef.current.soundTimer);
             if (timersRef.current.introTimer) clearTimeout(timersRef.current.introTimer);
             if (timersRef.current.fadeTimer) clearTimeout(timersRef.current.fadeTimer);
@@ -229,7 +222,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
 
     return (
         <div className="tv-content-wrapper" onClick={handleContainerClick} style={CONTAINER_STYLE}>
-            {/* Netflix Intro Animation */}
             {showIntro && (
                 <div
                     style={{
@@ -257,7 +249,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                 </div>
             )}
 
-            {/* Main Content with fade-in animation */}
             <div
                 style={{
                     width: '100%',
@@ -266,7 +257,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     transition: 'opacity 1s ease-in-out',
                 }}
             >
-                {/* Netflix Logo */}
                 <div style={LOGO_CONTAINER_STYLE}>
                     <img
                         ref={logoRef}
@@ -276,27 +266,20 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     />
                 </div>
 
-                {/* Scrollable Container */}
                 <div style={SCROLL_CONTAINER_STYLE} onScroll={handleScroll}>
-                    {/* Hero Section */}
                     <div style={HERO_SECTION_STYLE}>
-                        {/* Gradient Overlays */}
                         <div style={GRADIENT_RIGHT_STYLE} />
                         <div style={GRADIENT_BOTTOM_STYLE} />
 
-                        {/* Hero Content */}
                         <div style={HERO_CONTENT_STYLE}>
-                            {/* Title */}
                             <h1 style={TITLE_STYLE}>Prince Kumar</h1>
 
-                            {/* Description */}
                             <p style={DESCRIPTION_STYLE}>
                                 Senior Frontend Developer with 6+ years of experience crafting exceptional
                                 user experiences. Specialized in React, TypeScript, and modern web technologies.
                                 Passionate about building performant, scalable, and visually stunning applications.
                             </p>
 
-                            {/* Buttons */}
                             <div style={BUTTONS_CONTAINER_STYLE}>
                                 <ResumeButton />
                                 <MoreInfoButton />
@@ -304,7 +287,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                         </div>
                     </div>
 
-                    {/* Favourite Recommendations Section */}
                     <div style={{ ...SECTION_STYLE, marginBottom: '70px' }}>
                         <h2 style={SECTION_TITLE_STYLE}>Favourite Recommendations</h2>
 
@@ -317,7 +299,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                         </div>
                     </div>
 
-                    {/* Top Picks Section */}
                     <div style={{ ...SECTION_STYLE, paddingBottom: '40px' }}>
                         <h2 style={SECTION_TITLE_STYLE}>Top Picks</h2>
 
@@ -331,7 +312,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     </div>
                 </div>
 
-                {/* Custom scrollbar styles */}
                 <style>{`
                 div::-webkit-scrollbar {
                     width: 10px;
@@ -355,7 +335,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
 
 TvScreenContent.displayName = 'TvScreenContent';
 
-// Extracted sub-components for better performance
 const ResumeButton = memo(() => {
     const [isHovered, setIsHovered] = useState(false);
 

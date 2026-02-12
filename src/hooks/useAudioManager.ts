@@ -18,7 +18,6 @@ const AUDIO_SRC: Record<AudioType, string> = {
 
 const useAudioManager = (type: AudioType, duration: number = 1000) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // Lazy-init the Audio object once, not on every render
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const getAudio = useCallback(() => {

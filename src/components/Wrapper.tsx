@@ -2,7 +2,6 @@ import { Canvas } from "@react-three/fiber"
 import * as THREE from 'three';
 import useTheme from "../hooks/useTheme";
 import { lazy, Suspense, useRef, useState, useEffect } from "react";
-// import { Perf } from "r3f-perf";
 import EscapeButton from "./EscapeButton";
 import LoadingScreen from "./LoadingScreen";
 
@@ -14,7 +13,6 @@ const Wrapper = () => {
 
     const { colors } = useTheme();
 
-    // Listen for zoom changes from Canvas
     useEffect(() => {
         const handleZoomChanged = (e: Event) => {
             const customEvent = e as CustomEvent<{ isZoomed: boolean }>;
@@ -25,7 +23,6 @@ const Wrapper = () => {
         return () => window.removeEventListener('navigationZoomChanged', handleZoomChanged);
     }, []);
 
-    // Listen for scene loaded event
     useEffect(() => {
         const handleSceneLoaded = () => {
             setShowStartButton(true);
@@ -37,7 +34,6 @@ const Wrapper = () => {
 
     return (
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-            {/* CSS3D Container - rendered ABOVE WebGL canvas */}
             <div
                 ref={css3DContainerRef}
                 style={{
@@ -46,7 +42,7 @@ const Wrapper = () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    pointerEvents: 'none', // Allow clicks to pass through to WebGL
+                    pointerEvents: 'none',
                     zIndex: 1
                 }}
             />
@@ -57,7 +53,7 @@ const Wrapper = () => {
                     type: THREE.PCFSoftShadowMap,
                 }}
                 gl={{
-                    antialias: false, // Handled by EffectComposer multisampling
+                    antialias: false,
                     toneMapping: THREE.ACESFilmicToneMapping,
                     toneMappingExposure: 0.5,
                     outputColorSpace: THREE.SRGBColorSpace,
@@ -73,7 +69,6 @@ const Wrapper = () => {
                 dpr={[1, 2]}
                 performance={{ min: 0.5 }}
             >
-                {/* <Perf style={{ zIndex: 100000000 }} position="top-left" /> */}
                 <Suspense fallback={<></>}>
                     <LazyScene sceneLoaded={sceneLoaded} />
                 </Suspense>

@@ -40,11 +40,9 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const [originalCameraTarget, setOriginalCameraTarget] = useState({ x: 0, y: 0, z: 0 });
     const [originalCameraRotation, setOriginalCameraRotation] = useState({ x: 0, y: 0, z: 0, w: 1 });
 
-    // Capture initial camera state on mount
     useEffect(() => {
         if (hasInitialized.current) return;
 
-        // Small delay to ensure controls are ready
         const timer = setTimeout(() => {
             if (camera && !hasInitialized.current) {
                 setOriginalCameraPosition({
