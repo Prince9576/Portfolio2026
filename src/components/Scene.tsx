@@ -31,7 +31,7 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
                 makeDefault
                 enableDamping
                 dampingFactor={0.08}
-                rotateSpeed={0.6}
+                rotateSpeed={0.4}
                 maxPolarAngle={Math.PI / 3}
                 minAzimuthAngle={-0.5}
                 maxAzimuthAngle={0.5}

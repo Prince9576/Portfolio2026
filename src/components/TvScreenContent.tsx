@@ -1,6 +1,7 @@
 import { Download, Info } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import useAudioManager, { AudioType } from '../hooks/useAudioManager';
+import { BG_START_TIME } from '../constants';
 
 interface TvScreenContentProps {
     onScreenClick?: () => void;
@@ -203,7 +204,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
                     bgMusicPlayedRef.current = true;
                     playBackgroundMusic();
                 }
-            }, 3600);
+            }, BG_START_TIME);
         };
 
         window.addEventListener('sceneLoaded', handleSceneLoaded);

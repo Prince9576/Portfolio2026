@@ -6,12 +6,15 @@ import EscapeButton from "./EscapeButton";
 import LoadingScreen from "./LoadingScreen";
 import useAudioManager, { AudioType } from "../hooks/useAudioManager";
 import SoundController from "./SoundController";
+import { BG_START_TIME } from "../constants";
 
 const Wrapper = () => {
     const css3DContainerRef = useRef<HTMLDivElement>(null);
     const [isZoomed, setIsZoomed] = useState(false);
     const [showStartButton, setShowStartButton] = useState(false);
     const [sceneLoaded, setSceneLoaded] = useState(false);
+    const [showSoundController, setShowSoundController] = useState(false);
+    const ctrlTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const { colors } = useTheme();
     const { play: playButtonClick } = useAudioManager(AudioType.BUTTON_CLICK, 500);
@@ -23,7 +26,15 @@ const Wrapper = () => {
         };
 
         window.addEventListener('navigationZoomChanged', handleZoomChanged);
-        return () => window.removeEventListener('navigationZoomChanged', handleZoomChanged);
+
+        ctrlTimer.current = setTimeout(() => {
+            setShowSoundController(true);
+        }, 2000 + BG_START_TIME);
+
+        return () => {
+            window.removeEventListener('navigationZoomChanged', handleZoomChanged);
+            if (ctrlTimer.current) clearTimeout(ctrlTimer.current);
+        };
     }, []);
 
     useEffect(() => {
@@ -87,7 +98,7 @@ const Wrapper = () => {
 
             </Canvas>
             <EscapeButton isVisible={isZoomed} />
-            {sceneLoaded && <SoundController />}
+            {sceneLoaded && showSoundController && <SoundController />}
         </div>
     )
 }
