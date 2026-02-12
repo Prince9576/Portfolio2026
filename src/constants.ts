@@ -20,6 +20,12 @@ const TV_CAMERA_VIEW = {
     rotation: { x: -0.16, y: -0.6, z: 0.09, w: 1 }
 }
 
+const TV_CAMERA_VIEW_PORTRAIT = {
+    position: { x: -1.2, y: 1.57, z: -0.3 },
+    target: { x: 3.6, y: 0.3, z: -2.7 },
+    rotation: { x: -0.5, y: -0.2, z: 0.63, w: 0.61 }
+}
+
 const PHONE_CAMERA_VIEW = {
     position: { x: 0.288, y: 0.1, z: 3.0 },
     target: { x: 3.9, y: 0.5, z: 1.2 },
@@ -29,4 +35,4 @@ const PHONE_CAMERA_VIEW = {
 const BG_START_TIME = 4000;
 
 
-export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT, LAPTOP_CAMERA_VIEW, TV_CAMERA_VIEW, PHONE_CAMERA_VIEW, BG_START_TIME };
+export { TV_SCREEN_SIZE_UNITS, SCREEN_SCALE, screenWidth as SCREEN_WIDTH, screenHeight as SCREEN_HEIGHT, LAPTOP_CAMERA_VIEW, TV_CAMERA_VIEW, TV_CAMERA_VIEW_PORTRAIT, PHONE_CAMERA_VIEW, BG_START_TIME };

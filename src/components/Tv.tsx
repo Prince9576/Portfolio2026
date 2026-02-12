@@ -5,25 +5,30 @@ import useOutline from '../hooks/useOutline';
 import * as THREE from 'three';
 import useNavigation from '../hooks/useNavigation';
 import { useNavigationContext } from '../context/NavigationContext';
-import { TV_CAMERA_VIEW } from '../constants';
+import { TV_CAMERA_VIEW, TV_CAMERA_VIEW_PORTRAIT } from '../constants';
+import useMobilePortrait from '../hooks/useMobilePortrait';
 
 const Tv = memo(({ nodes, materials }: { nodes: any, materials: any }) => {
     const tvScreenRef = useRef<THREE.Mesh>(null);
     const tvGroupRef = useRef<THREE.Group>(null);
     const { flyToPosition } = useNavigation();
     const { isZoomed } = useNavigationContext();
+    const isMobilePortrait = useMobilePortrait();
 
     const { on3DPointerOver, on3DPointerOut, onHtmlMouseEnter, onHtmlMouseLeave } = useOutline(tvGroupRef);
 
     const handleClick = useCallback(() => {
         if (isZoomed) return;
+
+        const cameraView = isMobilePortrait ? TV_CAMERA_VIEW_PORTRAIT : TV_CAMERA_VIEW;
+
         flyToPosition(
-            TV_CAMERA_VIEW.position,
-            TV_CAMERA_VIEW.target,
-            TV_CAMERA_VIEW.rotation,
+            cameraView.position,
+            cameraView.target,
+            cameraView.rotation,
             1
         );
-    }, [flyToPosition, isZoomed]);
+    }, [flyToPosition, isZoomed, isMobilePortrait]);
 
     return (<group
         position={[-0.28, 3.631, -3.878]}
