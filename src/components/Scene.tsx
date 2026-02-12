@@ -32,10 +32,12 @@ const Scene = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
                 enableDamping
                 dampingFactor={0.08}
                 rotateSpeed={0.6}
-                maxPolarAngle={Math.PI / 2.1}
+                maxPolarAngle={Math.PI / 3}
+                minAzimuthAngle={-0.5}
+                maxAzimuthAngle={0.5}
                 minDistance={4}
-                maxDistance={20}
-                enableZoom={false}
+                maxDistance={15}
+                enableZoom={true}
                 enablePan={false}
             />
             <NavigationProvider>
