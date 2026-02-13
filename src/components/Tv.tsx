@@ -52,13 +52,13 @@ const Tv = memo(({ nodes, materials }: TvProps) => {
       onPointerOut={on3DPointerOut}
       onClick={handleClick}
     >
-      <mesh geometry={nodes.Plane006.geometry} material={materials.TV} />
+      <mesh geometry={nodes.Plane006.geometry} material={materials.TVDisplay} />
       <mesh ref={tvScreenRef} geometry={nodes.Plane006_1.geometry}>
         <meshBasicMaterial color="#1a1a1f" toneMapped={false} />
         <Html
           className="tv-content"
           rotation-x={-Math.PI / 2}
-          position={[0.155, 0.19, -0.025]}
+          position={[0.155, 0.17, -0.025]}
           transform
           occlude="blending"
           scale={0.2}
@@ -73,10 +73,6 @@ const Tv = memo(({ nodes, materials }: TvProps) => {
           </div>
         </Html>
       </mesh>
-      <mesh
-        geometry={nodes.Plane006_2.geometry}
-        material={materials.TVBacklight}
-      />
     </group>
   );
 });
