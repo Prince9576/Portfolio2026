@@ -8,6 +8,7 @@ import useWallFrameSpotlight from "../hooks/useWallFrameSpotlight";
 import Shelf from "./Shelf";
 import Tv from "./Tv";
 import Phone from "./Phone";
+import type { GLTF } from "three-stdlib";
 
 const Main = memo((props: { scale: number }) => {
   const { nodes, materials } = useGLTF("/models/room.glb", true) as any;
@@ -41,6 +42,7 @@ const Main = memo((props: { scale: number }) => {
       />
       <mesh
         castShadow
+        receiveShadow
         geometry={nodes.Plane.geometry}
         material={materials.greey}
         position={[2.619, 0.376, 2.503]}
@@ -278,7 +280,7 @@ const Main = memo((props: { scale: number }) => {
           rotation={[2.866, -0.884, -1.712]}
           scale={0.07}
         />
-        <Light lights={guitarSpotlight} showHelpers={false} />
+        <Light lights={guitarSpotlight} />
       </group>
       <mesh
         castShadow

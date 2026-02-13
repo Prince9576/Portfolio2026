@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei";
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useRef, useMemo } from "react";
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import useOutline from "../hooks/useOutline";
@@ -19,20 +19,23 @@ const Phone = memo(() => {
   const linkedinRef = useRef<THREE.Mesh>(null);
   const githubRef = useRef<THREE.Mesh>(null);
 
-  const iconScales = {
-    instagram: {
-      initial: 0.0471,
-      zoomed: 0.05,
-    },
-    linkedin: {
-      initial: 0.044,
-      zoomed: 0.048,
-    },
-    github: {
-      initial: 0.04,
-      zoomed: 0.044,
-    },
-  };
+  const iconScales = useMemo(
+    () => ({
+      instagram: {
+        initial: 0.0471,
+        zoomed: 0.05,
+      },
+      linkedin: {
+        initial: 0.044,
+        zoomed: 0.048,
+      },
+      github: {
+        initial: 0.04,
+        zoomed: 0.044,
+      },
+    }),
+    [],
+  );
 
   const handleIconPointerEnter = useCallback(
     (icon: "instagram" | "linkedin" | "github") => {
@@ -53,7 +56,7 @@ const Phone = memo(() => {
         });
       }
     },
-    [],
+    [iconScales],
   );
 
   const handleIconPointerLeave = useCallback(
@@ -75,7 +78,7 @@ const Phone = memo(() => {
         });
       }
     },
-    [],
+    [iconScales],
   );
 
   const handleIconClick = useCallback(

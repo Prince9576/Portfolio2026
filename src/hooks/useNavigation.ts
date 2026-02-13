@@ -72,7 +72,9 @@ const useNavigation = () => {
     ) => {
       setIsZoomed(true);
       play();
+      // eslint-disable-next-line react-hooks/immutability
       orbitControls.enabled = false;
+      // eslint-disable-next-line react-hooks/immutability
       orbitControls.enableDamping = false;
 
       const quat = new THREE.Quaternion(

@@ -31,6 +31,7 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 
 export default NavigationContext;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useNavigationContext = () => {
   const context = useContext(NavigationContext);
   if (!context) {

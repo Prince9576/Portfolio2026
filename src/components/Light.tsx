@@ -1,4 +1,5 @@
 import { memo, useRef, useEffect, useLayoutEffect } from "react";
+import * as THREE from "three";
 
 export interface LightConfig {
   type: string;
@@ -18,30 +19,35 @@ export interface LightConfig {
   penumbra?: number;
   distance?: number;
   decay?: number;
-  targetRef?: any;
+  targetRef?: React.RefObject<THREE.Object3D>;
 }
 
 interface LightProps {
   lights: LightConfig[];
-  showHelpers?: boolean;
 }
 
 const LightComponent = memo(
-  ({ light, showHelpers }: { light: LightConfig; showHelpers: boolean }) => {
-    const lightRef = useRef<any>(null);
+  ({ light }: { light: LightConfig }) => {
+    const lightRef = useRef<THREE.Light>(null);
 
     useLayoutEffect(() => {
       if (lightRef.current && light.targetRef && light.targetRef.current) {
-        lightRef.current.target = light.targetRef.current;
+        const directionalOrSpot = lightRef.current as THREE.DirectionalLight | THREE.SpotLight;
+        if ('target' in directionalOrSpot) {
+          directionalOrSpot.target = light.targetRef.current;
+        }
       }
-    }, [light.targetRef, light.targetRef?.current]);
+    }, [light.targetRef]);
 
     useEffect(() => {
       if (!light.targetRef) return;
 
       const checkTarget = () => {
         if (lightRef.current && light.targetRef?.current) {
-          lightRef.current.target = light.targetRef.current;
+          const directionalOrSpot = lightRef.current as THREE.DirectionalLight | THREE.SpotLight;
+          if ('target' in directionalOrSpot) {
+            directionalOrSpot.target = light.targetRef.current;
+          }
         }
       };
 
@@ -56,18 +62,19 @@ const LightComponent = memo(
       return () => timeouts.forEach(clearTimeout);
     }, [light.targetRef]);
 
+    // Effect for rectAreaLight lookAt - must be at top level
+    useEffect(() => {
+      if (light.type === "rectAreaLight" && lightRef.current) {
+        lightRef.current.lookAt(0, 0, 0);
+      }
+    }, [light.type, light.position]);
+
     switch (light.type) {
       case "ambientLight": {
         return <ambientLight intensity={light.intensity || 0.25} />;
       }
 
       case "rectAreaLight": {
-        useEffect(() => {
-          if (lightRef.current) {
-            lightRef.current.lookAt(0, 0, 0);
-          }
-        }, [light.position]);
-
         return (
           <group position={light.position as [number, number, number]}>
             <rectAreaLight
@@ -84,33 +91,23 @@ const LightComponent = memo(
 
       case "directionalLight": {
         return (
-          <>
-            <directionalLight
-              ref={lightRef}
-              position={light.position as [number, number, number]}
-              intensity={light.intensity || 1}
-              color={light.color || "#ffffff"}
-              castShadow={light.castShadow}
-              shadow-mapSize={[1024, 1024]}
-              shadow-camera-near={0.1}
-              shadow-camera-far={50}
-              shadow-camera-left={-20}
-              shadow-camera-right={20}
-              shadow-camera-top={20}
-              shadow-camera-bottom={-20}
-              shadow-bias={-0.0005}
-              shadow-normalBias={0.02}
-              shadow-radius={8}
-            />
-            {showHelpers && lightRef.current && (
-              <>
-                <directionalLightHelper args={[lightRef.current, 2]} />
-                {lightRef.current.shadow && (
-                  <cameraHelper args={[lightRef.current.shadow.camera]} />
-                )}
-              </>
-            )}
-          </>
+          <directionalLight
+            ref={lightRef}
+            position={light.position as [number, number, number]}
+            intensity={light.intensity || 1}
+            color={light.color || "#ffffff"}
+            castShadow={light.castShadow}
+            shadow-mapSize={[1024, 1024]}
+            shadow-camera-near={0.1}
+            shadow-camera-far={50}
+            shadow-camera-left={-20}
+            shadow-camera-right={20}
+            shadow-camera-top={20}
+            shadow-camera-bottom={-20}
+            shadow-bias={-0.0005}
+            shadow-normalBias={0.02}
+            shadow-radius={8}
+          />
         );
       }
 
@@ -136,19 +133,14 @@ const LightComponent = memo(
 
       case "pointLight": {
         return (
-          <>
-            <pointLight
-              ref={lightRef}
-              position={light.position as [number, number, number]}
-              intensity={light.intensity || 1}
-              color={light.color || "#ffffff"}
-              distance={light.distance || 10}
-              castShadow={light.castShadow}
-            />
-            {showHelpers && lightRef.current && (
-              <pointLightHelper args={[lightRef.current, 1]} />
-            )}
-          </>
+          <pointLight
+            ref={lightRef}
+            position={light.position as [number, number, number]}
+            intensity={light.intensity || 1}
+            color={light.color || "#ffffff"}
+            distance={light.distance || 10}
+            castShadow={light.castShadow}
+          />
         );
       }
 
@@ -161,14 +153,13 @@ const LightComponent = memo(
 
 LightComponent.displayName = "LightComponent";
 
-const Light = memo(({ lights, showHelpers = false }: LightProps) => {
+const Light = memo(({ lights }: LightProps) => {
   return (
     <>
       {lights.map((light, index) => (
         <LightComponent
           key={`${light.type}-${index}`}
           light={light}
-          showHelpers={showHelpers}
         />
       ))}
     </>

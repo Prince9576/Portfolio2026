@@ -43,7 +43,7 @@ const useSceneLights = () => {
         penumbra: 0.5,
         distance: 20,
         decay: 2,
-        castShadow: false,
+        castShadow: true,
       },
       {
         type: "spotLight",

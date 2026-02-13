@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 
 export const AudioType = {
   XP: "xp",
@@ -30,9 +30,11 @@ const useAudioManager = (
   const optionsRef = useRef(options);
 
   // Update options ref when options change
-  if (options) {
-    optionsRef.current = options;
-  }
+  useEffect(() => {
+    if (options) {
+      optionsRef.current = options;
+    }
+  }, [options]);
 
   const getAudio = useCallback(() => {
     if (!audioRef.current) {

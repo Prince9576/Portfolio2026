@@ -8,7 +8,12 @@ import { useNavigationContext } from "../context/NavigationContext";
 import { TV_CAMERA_VIEW, TV_CAMERA_VIEW_PORTRAIT } from "../constants";
 import useMobilePortrait from "../hooks/useMobilePortrait";
 
-const Tv = memo(({ nodes, materials }: { nodes: any; materials: any }) => {
+interface TvProps {
+  nodes: Record<string, THREE.Mesh>;
+  materials: Record<string, THREE.Material>;
+}
+
+const Tv = memo(({ nodes, materials }: TvProps) => {
   const tvScreenRef = useRef<THREE.Mesh>(null);
   const tvGroupRef = useRef<THREE.Group>(null);
   const { flyToPosition } = useNavigation();

@@ -223,16 +223,13 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     };
 
     window.addEventListener("sceneLoaded", handleSceneLoaded);
+    const timers = timersRef.current;
     return () => {
       window.removeEventListener("sceneLoaded", handleSceneLoaded);
-      if (timersRef.current.soundTimer)
-        clearTimeout(timersRef.current.soundTimer);
-      if (timersRef.current.introTimer)
-        clearTimeout(timersRef.current.introTimer);
-      if (timersRef.current.fadeTimer)
-        clearTimeout(timersRef.current.fadeTimer);
-      if (timersRef.current.bgMusicTimer)
-        clearTimeout(timersRef.current.bgMusicTimer);
+      if (timers.soundTimer) clearTimeout(timers.soundTimer);
+      if (timers.introTimer) clearTimeout(timers.introTimer);
+      if (timers.fadeTimer) clearTimeout(timers.fadeTimer);
+      if (timers.bgMusicTimer) clearTimeout(timers.bgMusicTimer);
       cleanupNetflixSound();
       cleanupBackgroundMusic();
       bgMusicPlayedRef.current = false;
@@ -277,8 +274,8 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     const { scrollTop } = e.currentTarget;
     if (scrollTop > 30 && logoRef.current) {
       logoRef.current.style.opacity = "0";
-    } else {
-      logoRef.current && (logoRef.current.style.opacity = "1");
+    } else if (logoRef.current) {
+      logoRef.current.style.opacity = "1";
     }
   }, []);
 

@@ -145,7 +145,7 @@ const WorkEx = memo(() => {
 
   useEffect(() => {
     return cleanup;
-  }, []);
+  }, [cleanup]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -243,7 +243,7 @@ const WorkEx = memo(() => {
         }, 1000);
       }
     },
-    [collectedSkills, totalXP],
+    [collectedSkills, totalXP, play],
   );
 
   const handleCardMouseEnter = useCallback((id: number) => {
@@ -789,7 +789,13 @@ const SkillButton = memo(
 
 SkillButton.displayName = "SkillButton";
 
-const StatCard = memo(({ stat }: { stat: any }) => {
+interface Stat {
+  label: string;
+  value: number;
+  color: string;
+}
+
+const StatCard = memo(({ stat }: { stat: Stat }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = useCallback(() => {

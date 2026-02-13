@@ -1,7 +1,10 @@
 import { useGLTF } from "@react-three/drei";
-import { memo } from "react";
+import { memo, type JSX } from "react";
+import * as THREE from "three";
+import type { GLTF } from "three-stdlib";
 
-const Shelf = memo(function Shelf(props: any) {
+
+const Shelf = memo(function Shelf(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/models/Shelf.glb") as any;
   return (
     <group {...props} dispose={null}>

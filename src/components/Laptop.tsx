@@ -1,15 +1,13 @@
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useRef, type JSX } from "react";
 import { Html, useGLTF } from "@react-three/drei";
-import { LAPTOP_CAMERA_VIEW } from "../constants";
 import WorkEx from "./WorkEx";
 import useOutline from "../hooks/useOutline";
 import * as THREE from "three";
 import { useNavigationContext } from "../context/NavigationContext";
-import { useControls, button } from "leva";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
-const Laptop = memo((props: any) => {
+const Laptop = memo((props: JSX.IntrinsicElements["group"]) => {
   const { isZoomed, setIsZoomed } = useNavigationContext();
   const { nodes, materials } = useGLTF("/models/mac-draco.glb", true) as any;
   const groupRef = useRef<THREE.Group>(null);
@@ -19,7 +17,7 @@ const Laptop = memo((props: any) => {
     onHtmlMouseEnter,
     onHtmlMouseLeave,
   } = useOutline(groupRef);
-  const { camera, controls } = useThree();
+  const { controls } = useThree();
   const orbitControls = controls as OrbitControlsImpl;
 
   // const laptopCameraControls = useControls('Laptop Camera', {
@@ -59,7 +57,9 @@ const Laptop = memo((props: any) => {
 
     setIsZoomed(true);
     if (orbitControls) {
+      // eslint-disable-next-line react-hooks/immutability
       orbitControls.enabled = false;
+      // eslint-disable-next-line react-hooks/immutability
       orbitControls.enableDamping = false;
     }
   }, [isZoomed, setIsZoomed, orbitControls]);
