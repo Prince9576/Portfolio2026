@@ -39,6 +39,12 @@ const PHONE_CAMERA_VIEW = {
   rotation: { x: -1, y: -0.2, z: -0.2, w: 1 },
 };
 
+const PHONE_CAMERA_VIEW_PORTRAIT = {
+  position: { x: 0.078, y: -0.53, z: 2.18 },
+  target: { x: 3.9, y: 0.5, z: 1.2 },
+  rotation: { x: -1, y: -0.2, z: -0.2, w: 1 },
+};
+
 const BG_START_TIME = 4000;
 
 export {
@@ -51,5 +57,6 @@ export {
   TV_CAMERA_VIEW,
   TV_CAMERA_VIEW_PORTRAIT,
   PHONE_CAMERA_VIEW,
+  PHONE_CAMERA_VIEW_PORTRAIT,
   BG_START_TIME,
 };

@@ -5,8 +5,9 @@ import type { ThreeEvent } from "@react-three/fiber";
 import useOutline from "../hooks/useOutline";
 import { useNavigationContext } from "../context/NavigationContext";
 import useNavigation from "../hooks/useNavigation";
-import { PHONE_CAMERA_VIEW } from "../constants";
+import { PHONE_CAMERA_VIEW, PHONE_CAMERA_VIEW_PORTRAIT } from "../constants";
 import gsap from "gsap";
+import useMobilePortrait from "../hooks/useMobilePortrait";
 
 const Phone = memo(() => {
   const { nodes, materials } = useGLTF("/models/phone-draco-v1.glb", true) as any;
@@ -14,6 +15,7 @@ const Phone = memo(() => {
   const { isZoomed } = useNavigationContext();
   const phoneGroupRef = useRef<THREE.Group>(null);
   const { on3DPointerOver, on3DPointerOut } = useOutline(phoneGroupRef);
+  const isMobilePortrait = useMobilePortrait();
 
   const instagramRef = useRef<THREE.Mesh>(null);
   const linkedinRef = useRef<THREE.Mesh>(null);
@@ -96,13 +98,18 @@ const Phone = memo(() => {
 
   const handleClick = useCallback(() => {
     if (isZoomed) return;
+
+    const cameraView = isMobilePortrait
+      ? PHONE_CAMERA_VIEW_PORTRAIT
+      : PHONE_CAMERA_VIEW;
+
     flyToPosition(
-      PHONE_CAMERA_VIEW.position,
-      PHONE_CAMERA_VIEW.target,
-      PHONE_CAMERA_VIEW.rotation,
+      cameraView.position,
+      cameraView.target,
+      cameraView.rotation,
       1,
     );
-  }, [flyToPosition, isZoomed]);
+  }, [flyToPosition, isZoomed, isMobilePortrait]);
 
   return (
     <group position={[3.288, -1.025, 1.156]}
