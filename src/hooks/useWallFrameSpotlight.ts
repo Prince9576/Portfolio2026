@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import type { LightConfig } from "../components/Light";
-import * as THREE from "three";
 
 const useWallFrameSpotlight = (
-  frameRef: React.RefObject<THREE.Mesh | null>,
+  frameRef: any,
 ) => {
   const wallFrameSpotlight: LightConfig[] = useMemo(
     () => [

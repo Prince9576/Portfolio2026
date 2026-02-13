@@ -791,8 +791,9 @@ SkillButton.displayName = "SkillButton";
 
 interface Stat {
   label: string;
-  value: number;
+  value: string | number;
   color: string;
+  icon: React.ComponentType<{ size?: number; color?: string; style?: React.CSSProperties }>;
 }
 
 const StatCard = memo(({ stat }: { stat: Stat }) => {
