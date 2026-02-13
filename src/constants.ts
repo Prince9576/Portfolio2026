@@ -15,6 +15,12 @@ const LAPTOP_CAMERA_VIEW = {
   rotation: { x: -0.35, y: -0.29, z: -0.01, w: 1 },
 };
 
+const LAPTOP_CAMERA_VIEW_PORTRAIT = {
+  position: { x: -0.34, y: 0.01, z: 0.39 },
+  target: { x: 3.66, y: -4.96, z: -7.59 },
+  rotation: { x: -0.4, y: -0.3, z: -0.025, w: 1 },
+};
+
 const TV_CAMERA_VIEW = {
   position: { x: -0.9, y: 1.3, z: -1.2 },
   target: { x: 3.6, y: 0.3, z: -2.7 },
@@ -41,6 +47,7 @@ export {
   screenWidth as SCREEN_WIDTH,
   screenHeight as SCREEN_HEIGHT,
   LAPTOP_CAMERA_VIEW,
+  LAPTOP_CAMERA_VIEW_PORTRAIT,
   TV_CAMERA_VIEW,
   TV_CAMERA_VIEW_PORTRAIT,
   PHONE_CAMERA_VIEW,

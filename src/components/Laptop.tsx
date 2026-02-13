@@ -4,11 +4,12 @@ import WorkEx from "./WorkEx";
 import useOutline from "../hooks/useOutline";
 import * as THREE from "three";
 import { useNavigationContext } from "../context/NavigationContext";
-import { useThree } from "@react-three/fiber";
-import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { LAPTOP_CAMERA_VIEW, LAPTOP_CAMERA_VIEW_PORTRAIT } from "../constants";
+import useNavigation from "../hooks/useNavigation";
+import useMobilePortrait from "../hooks/useMobilePortrait";
 
 const Laptop = memo((props: JSX.IntrinsicElements["group"]) => {
-  const { isZoomed, setIsZoomed } = useNavigationContext();
+  const { isZoomed } = useNavigationContext();
   const { nodes, materials } = useGLTF("/models/mac-draco.glb", true) as any;
   const groupRef = useRef<THREE.Group>(null);
   const {
@@ -17,52 +18,23 @@ const Laptop = memo((props: JSX.IntrinsicElements["group"]) => {
     onHtmlMouseEnter,
     onHtmlMouseLeave,
   } = useOutline(groupRef);
-  const { controls } = useThree();
-  const orbitControls = controls as OrbitControlsImpl;
-
-  // const laptopCameraControls = useControls('Laptop Camera', {
-  //     positionX: { value: LAPTOP_CAMERA_VIEW.position.x, min: -5, max: 5, step: 0.01, label: 'Position X' },
-  //     positionY: { value: LAPTOP_CAMERA_VIEW.position.y, min: -5, max: 10, step: 0.01, label: 'Position Y' },
-  //     positionZ: { value: LAPTOP_CAMERA_VIEW.position.z, min: -5, max: 5, step: 0.01, label: 'Position Z' },
-  //     rotationX: { value: LAPTOP_CAMERA_VIEW.rotation.x, min: -1, max: 1, step: 0.01, label: 'Rotation X' },
-  //     rotationY: { value: LAPTOP_CAMERA_VIEW.rotation.y, min: -1, max: 2, step: 0.01, label: 'Rotation Y' },
-  //     rotationZ: { value: LAPTOP_CAMERA_VIEW.rotation.z, min: -1, max: 2, step: 0.01, label: 'Rotation Z' },
-  //     rotationW: { value: LAPTOP_CAMERA_VIEW.rotation.w, min: -1, max: 2, step: 0.01, label: 'Rotation W' },
-  //     'Log Values': button(() => {
-  //         console.log('Laptop Camera Values:', {
-  //             position: { x: laptopCameraControls.positionX, y: laptopCameraControls.positionY, z: laptopCameraControls.positionZ },
-  //             rotation: { x: laptopCameraControls.rotationX, y: laptopCameraControls.rotationY, z: laptopCameraControls.rotationZ, w: laptopCameraControls.rotationW }
-  //         });
-  //     })
-  // });
-
-  // // Apply camera settings from Leva controls every frame
-  // useFrame(() => {
-  //     if (!isZoomed) return;
-
-  //     camera.position.set(laptopCameraControls.positionX, laptopCameraControls.positionY, laptopCameraControls.positionZ);
-
-  //     const quat = new THREE.Quaternion(
-  //         laptopCameraControls.rotationX,
-  //         laptopCameraControls.rotationY,
-  //         laptopCameraControls.rotationZ,
-  //         laptopCameraControls.rotationW
-  //     );
-  //     quat.normalize();
-  //     camera.quaternion.copy(quat);
-  // });
+  const { flyToPosition } = useNavigation();
+  const isMobilePortrait = useMobilePortrait();
 
   const handleClick = useCallback(() => {
     if (isZoomed) return;
 
-    setIsZoomed(true);
-    if (orbitControls) {
-      // eslint-disable-next-line react-hooks/immutability
-      orbitControls.enabled = false;
-      // eslint-disable-next-line react-hooks/immutability
-      orbitControls.enableDamping = false;
-    }
-  }, [isZoomed, setIsZoomed, orbitControls]);
+    const cameraView = isMobilePortrait
+      ? LAPTOP_CAMERA_VIEW_PORTRAIT
+      : LAPTOP_CAMERA_VIEW;
+
+    flyToPosition(
+      cameraView.position,
+      cameraView.target,
+      cameraView.rotation,
+      1,
+    );
+  }, [flyToPosition, isZoomed, isMobilePortrait]);
 
   return (
     <group
