@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import type { LightConfig } from "../components/Light";
-import * as THREE from "three";
 
-const useGuitarSpotlight = (guitarRef: React.RefObject<THREE.Mesh | null>) => {
+const useGuitarSpotlight = (guitarRef: any) => {
   const guitarSpotlight: LightConfig[] = useMemo(
     () => [
       {

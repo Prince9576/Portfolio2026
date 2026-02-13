@@ -1,4 +1,4 @@
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, BakeShadows } from "@react-three/drei";
 import { memo, useEffect } from "react";
 import React from "react";
 import Light from "./Light";
@@ -86,6 +86,8 @@ const SceneContent = memo(({ sceneLoaded }: { sceneLoaded: boolean }) => {
       <Light lights={lights} />
 
       <Room scale={sceneLoaded ? (isMobilePortrait ? 0.75 : 1.05) : 0} />
+
+      {sceneLoaded && <BakeShadows />}
     </PostProcess>
   );
 });

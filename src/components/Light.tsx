@@ -19,7 +19,7 @@ export interface LightConfig {
   penumbra?: number;
   distance?: number;
   decay?: number;
-  targetRef?: React.RefObject<THREE.Object3D>;
+  targetRef?: React.RefObject<THREE.Object3D> | null;
 }
 
 interface LightProps {
@@ -124,8 +124,8 @@ const LightComponent = memo(
             distance={light.distance || 0}
             decay={light.decay !== undefined ? light.decay : 2}
             castShadow={light.castShadow}
-            shadow-mapSize-width={512}
-            shadow-mapSize-height={512}
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
             shadow-bias={-0.0005}
           />
         );
