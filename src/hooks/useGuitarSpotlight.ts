@@ -18,7 +18,6 @@ const useGuitarSpotlight = (guitarRef: any) => {
         targetRef: guitarRef,
       },
     ],
-    // guitarRef is stable and doesn't need to trigger re-memoization
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );

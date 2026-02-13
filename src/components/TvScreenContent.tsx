@@ -247,10 +247,8 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
       const { isMuted } = customEvent.detail;
 
       if (isMuted) {
-        // If muted (isMuted = true), pause the music
         pauseBackgroundMusic();
       } else {
-        // If not muted (isMuted = false), play/resume the music
         if (bgMusicPlayedRef.current) {
           resumeBackgroundMusic();
         } else {

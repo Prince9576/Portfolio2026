@@ -29,7 +29,6 @@ const useAudioManager = (
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const optionsRef = useRef(options);
 
-  // Update options ref when options change
   useEffect(() => {
     if (options) {
       optionsRef.current = options;
@@ -39,7 +38,6 @@ const useAudioManager = (
   const getAudio = useCallback(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(AUDIO_SRC[type]);
-      // Set loop and volume only when audio is first created
       if (optionsRef.current?.loop !== undefined) {
         audioRef.current.loop = optionsRef.current.loop;
       }
@@ -53,7 +51,6 @@ const useAudioManager = (
   const play = useCallback(() => {
     const audio = getAudio();
 
-    // Only reset currentTime if audio is not already playing
     if (audio.paused) {
       audio.currentTime = 0;
     }
