@@ -303,18 +303,6 @@ const Main = memo((props: { scale: number }) => {
         rotation={[0, Math.PI / 2, 0]}
         scale={0.001}
       />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Plane012_1.geometry}
-        material={materials.BookCover}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Plane012_2.geometry}
-        material={materials.PaletteMaterial005}
-      />
     </group>
   )
 
