@@ -41,6 +41,8 @@ const SCROLL_CONTAINER_STYLE: React.CSSProperties = {
   overflowX: "hidden",
   scrollbarWidth: "thin",
   scrollbarColor: "#4a4a4a #141414",
+  touchAction: "pan-y pan-x",
+  WebkitOverflowScrolling: "touch",
 };
 
 const HERO_SECTION_STYLE: React.CSSProperties = {

@@ -25,6 +25,9 @@ body {
   background: #f0f0f0;
   border-radius: 3px;
   padding: 0;
+  pointer-events: auto !important;
+  touch-action: pan-y pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 .laptop-wrapper {
@@ -32,6 +35,9 @@ body {
   height: 432px;
   transform: scale(0.5);
   transform-origin: top left;
+  pointer-events: auto !important;
+  touch-action: pan-y pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tv-content {
@@ -41,6 +47,9 @@ body {
   border-radius: 3px;
   padding: 0;
   overflow: hidden;
+  pointer-events: auto !important;
+  touch-action: pan-y pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tv-wrapper {
@@ -48,6 +57,9 @@ body {
   height: 920px;
   transform: scale(0.5);
   transform-origin: top left;
+  pointer-events: auto !important;
+  touch-action: pan-y pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 #leva__root {

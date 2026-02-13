@@ -22,6 +22,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   position: "relative",
   scrollbarWidth: "thin",
   scrollbarColor: "#4F46E5 #1a1a1a",
+  touchAction: "pan-y pan-x",
+  WebkitOverflowScrolling: "touch",
 };
 
 const BACKGROUND_GRADIENT_STYLE: React.CSSProperties = {
