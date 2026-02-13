@@ -9,7 +9,7 @@ import { PHONE_CAMERA_VIEW } from "../constants";
 import gsap from "gsap";
 
 const Phone = memo(() => {
-  const { nodes, materials } = useGLTF("/models/phone.glb", true) as any;
+  const { nodes, materials } = useGLTF("/models/phone-draco-v1.glb", true) as any;
   const { flyToPosition } = useNavigation();
   const { isZoomed } = useNavigationContext();
   const phoneGroupRef = useRef<THREE.Group>(null);
@@ -103,55 +103,29 @@ const Phone = memo(() => {
       1,
     );
   }, [flyToPosition, isZoomed]);
+
   return (
-    <group
-      position={[3.288, -1.025, 1.156]}
+    <group position={[3.288, -1.025, 1.156]}
       rotation-y={0.81}
-      dispose={null}
       ref={phoneGroupRef}
       onPointerOver={on3DPointerOver}
       onPointerOut={on3DPointerOut}
-      onClick={handleClick}
-    >
+      onClick={handleClick}>
       <mesh
         castShadow
+        receiveShadow
         geometry={nodes.Phone.geometry}
-        material={materials["Phone Cover"]}
+        material={materials['Phone Cover']}
         position={[0.277, 1.287, -0.158]}
         rotation={[0, -0.175, Math.PI]}
         scale={0.001}
-      >
-        <mesh
-          castShadow
-          geometry={nodes.Cap1_3.geometry}
-          material={materials["default"]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cap1_4.geometry}
-          material={materials["default"]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cap1_5.geometry}
-          material={materials["default"]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cap1_6.geometry}
-          material={materials["default"]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cube1.geometry}
-          material={materials["Phone Display"]}
-        />
-      </mesh>
+      />
       <mesh
         ref={instagramRef}
         castShadow
+        receiveShadow
         geometry={nodes.Plane.geometry}
-        material={materials["Material.002"]}
+        material={materials['Material.002']}
         position={[0.479, 1.5, -0.563]}
         rotation={[0, -0.177, 0]}
         scale={iconScales.instagram.initial}
@@ -162,6 +136,7 @@ const Phone = memo(() => {
       <mesh
         ref={linkedinRef}
         castShadow
+        receiveShadow
         geometry={nodes.Plane001.geometry}
         material={materials.Material}
         position={[0.455, 1.5, -0.425]}
@@ -174,6 +149,7 @@ const Phone = memo(() => {
       <mesh
         ref={githubRef}
         castShadow
+        receiveShadow
         geometry={nodes.Plane002.geometry}
         material={materials.github}
         position={[0.435, 1.5, -0.3]}
@@ -183,12 +159,30 @@ const Phone = memo(() => {
         onPointerLeave={() => handleIconPointerLeave("github")}
         onClick={(e) => handleIconClick("github", e)}
       />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cap1_3.geometry}
+        material={materials['default']}
+        position={[0.277, 1.287, -0.158]}
+        rotation={[0, -0.175, Math.PI]}
+        scale={0.001}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cube1.geometry}
+        material={materials['Phone Display']}
+        position={[0.277, 1.287, -0.158]}
+        rotation={[0, -0.175, Math.PI]}
+        scale={0.001}
+      />
     </group>
-  );
+  )
 });
 
 Phone.displayName = "Phone";
 
 export default Phone;
 
-useGLTF.preload("/models/phone.glb", true);
+useGLTF.preload("/models/phone-draco-v1.glb", true);

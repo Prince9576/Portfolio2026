@@ -8,7 +8,6 @@ import useWallFrameSpotlight from "../hooks/useWallFrameSpotlight";
 import Shelf from "./Shelf";
 import Tv from "./Tv";
 import Phone from "./Phone";
-import type { GLTF } from "three-stdlib";
 
 const Main = memo((props: { scale: number }) => {
   const { nodes, materials } = useGLTF("/models/room.glb", true) as any;
