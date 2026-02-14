@@ -1,14 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/public/favicon_prince.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prince's Portfolio</title>
-  </head>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/favicon_prince.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Prince Kumar - Senior Frontend Developer with 6+ years of experience. Specialized in React, TypeScript, and modern web technologies." />
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta property="og:title" content="Prince's Portfolio" />
+  <meta property="og:description"
+    content="Senior Frontend Developer with 6+ years of experience crafting exceptional user experiences." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <title>Prince's Portfolio</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    // Optimize for back/forward cache
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        // Page was restored from bfcache
+        window.dispatchEvent(new CustomEvent("bfcacheRestore"));
+      }
+    });
+  </script>
+</body>
+
 </html>

@@ -412,6 +412,7 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
             ref={logoRef}
             src="/images/Logonetflix.png"
             alt="Netflix"
+            loading="eager"
             style={LOGO_STYLE}
           />
         </div>
@@ -555,6 +556,8 @@ const ThumbnailCard = memo(({ image }: { image: string }) => {
       <img
         src={image}
         alt=""
+        loading="lazy"
+        decoding="async"
         style={{
           width: "100%",
           height: "100%",

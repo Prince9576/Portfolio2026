@@ -431,6 +431,8 @@ const WorkEx = memo(() => {
                       <img
                         src={exp.logo}
                         alt={exp.company}
+                        loading="lazy"
+                        decoding="async"
                         style={{
                           height: "50px",
                           width: "auto",
