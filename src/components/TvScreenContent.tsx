@@ -181,12 +181,11 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
   const scrollContainerRef1 = useRef<HTMLDivElement>(null);
   const scrollContainerRef2 = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const [showIntro, setShowIntro] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(0);
 
-  const { play: playNetflixSound, cleanup: cleanupNetflixSound } =
-    useAudioManager(AudioType.NETFLIX, 2500);
   const {
     play: playBackgroundMusic,
     pause: pauseBackgroundMusic,
@@ -198,23 +197,80 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
     introTimer?: ReturnType<typeof setTimeout>;
     fadeTimer?: ReturnType<typeof setTimeout>;
     bgMusicTimer?: ReturnType<typeof setTimeout>;
+    videoCheckTimer?: ReturnType<typeof setTimeout>;
+    longFallbackTimer?: ReturnType<typeof setTimeout>;
   }>({});
   const bgMusicPlayedRef = useRef(false);
+  const hasTransitionedRef = useRef(false);
+
+  const handleVideoEnded = useCallback(() => {
+    if (hasTransitionedRef.current) return;
+    hasTransitionedRef.current = true;
+    setShowIntro(false);
+    setTimeout(() => {
+      setContentOpacity(1);
+    }, 100);
+  }, []);
+
+  const handleVideoError = useCallback(() => {
+    // If video fails to load, transition immediately
+    if (!hasTransitionedRef.current) {
+      hasTransitionedRef.current = true;
+      setShowIntro(false);
+      setTimeout(() => {
+        setContentOpacity(1);
+      }, 100);
+    }
+  }, []);
+
+  // Ensure video plays when it's ready
+  useEffect(() => {
+    if (showIntro && videoRef.current) {
+      const video = videoRef.current;
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Autoplay was prevented - transition to content since user wants sound
+          console.warn("Video autoplay prevented, transitioning to content:", error);
+          handleVideoError();
+        });
+      }
+    }
+  }, [showIntro, handleVideoError]);
 
   useEffect(() => {
     const handleSceneLoaded = () => {
+      hasTransitionedRef.current = false;
       setShowIntro(true);
+      setContentOpacity(0); // Reset content opacity
 
-      timersRef.current.soundTimer = setTimeout(() => {
-        playNetflixSound();
-      }, 500);
+      // Shorter fallback timer - if video doesn't start playing within 2 seconds, show content
+      timersRef.current.videoCheckTimer = setTimeout(() => {
+        if (!hasTransitionedRef.current && videoRef.current) {
+          // Check if video is actually playing
+          const video = videoRef.current;
+          if (video.readyState === 0 || video.paused) {
+            // Video hasn't loaded or isn't playing, transition to content
+            hasTransitionedRef.current = true;
+            setShowIntro(false);
+            timersRef.current.fadeTimer = setTimeout(() => {
+              setContentOpacity(1);
+            }, 100);
+          }
+        }
+      }, 2000); // 2 second initial check
 
-      timersRef.current.introTimer = setTimeout(() => {
-        setShowIntro(false);
-        timersRef.current.fadeTimer = setTimeout(() => {
-          setContentOpacity(1);
-        }, 100);
-      }, 2500);
+      // Longer fallback timer in case video doesn't end properly
+      timersRef.current.longFallbackTimer = setTimeout(() => {
+        if (!hasTransitionedRef.current) {
+          hasTransitionedRef.current = true;
+          setShowIntro(false);
+          setTimeout(() => {
+            setContentOpacity(1);
+          }, 100);
+        }
+      }, 8000); // 8 second absolute fallback
 
       timersRef.current.bgMusicTimer = setTimeout(() => {
         if (!bgMusicPlayedRef.current) {
@@ -232,13 +288,16 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
       if (timers.introTimer) clearTimeout(timers.introTimer);
       if (timers.fadeTimer) clearTimeout(timers.fadeTimer);
       if (timers.bgMusicTimer) clearTimeout(timers.bgMusicTimer);
-      cleanupNetflixSound();
+      if (timers.videoCheckTimer) clearTimeout(timers.videoCheckTimer);
+      if (timers.longFallbackTimer) clearTimeout(timers.longFallbackTimer);
+      // cleanupNetflixSound();
       cleanupBackgroundMusic();
       bgMusicPlayedRef.current = false;
+      hasTransitionedRef.current = false;
     };
   }, [
-    playNetflixSound,
-    cleanupNetflixSound,
+    // playNetflixSound,
+    // cleanupNetflixSound,
     playBackgroundMusic,
     cleanupBackgroundMusic,
   ]);
@@ -300,10 +359,37 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
             justifyContent: "center",
           }}
         >
-          <img
+          <video
+            ref={videoRef}
             key="netflix-intro"
-            src="images/netflix_intro.gif"
-            alt="Netflix Intro"
+            src="/images/netflix_intro_bgm.mp4"
+            autoPlay
+            playsInline
+            onEnded={handleVideoEnded}
+            onError={handleVideoError}
+            onLoadedData={() => {
+              // Ensure video plays when loaded
+              if (videoRef.current && !hasTransitionedRef.current) {
+                const playPromise = videoRef.current.play();
+                if (playPromise !== undefined) {
+                  playPromise.catch((error) => {
+                    console.warn("Video play failed:", error);
+                    handleVideoError();
+                  });
+                }
+              }
+            }}
+            onCanPlay={() => {
+              // Try to play when video can play
+              if (videoRef.current && !hasTransitionedRef.current && videoRef.current.paused) {
+                const playPromise = videoRef.current.play();
+                if (playPromise !== undefined) {
+                  playPromise.catch((error) => {
+                    console.warn("Video play failed on canPlay:", error);
+                  });
+                }
+              }
+            }}
             style={{
               width: "100%",
               height: "100%",
