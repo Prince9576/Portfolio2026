@@ -1,4 +1,4 @@
-import { Download, Info } from "lucide-react";
+import { Download } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import useAudioManager, { AudioType } from "../hooks/useAudioManager";
 import { BG_START_TIME } from "../constants";
@@ -433,7 +433,6 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
 
               <div style={BUTTONS_CONTAINER_STYLE}>
                 <ResumeButton />
-                <MoreInfoButton />
               </div>
             </div>
           </div>
@@ -492,6 +491,11 @@ const ResumeButton = memo(() => {
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
+  const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    window.open('https://drive.google.com/file/d/1bhHMyOH3EloEvbhOam6k5upCQPgmlcrr/view?usp=sharing', '_blank');
+  }, []);
+
   return (
     <button
       style={{
@@ -501,6 +505,7 @@ const ResumeButton = memo(() => {
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       <Download size={20} />
       Resume
@@ -509,32 +514,6 @@ const ResumeButton = memo(() => {
 });
 
 ResumeButton.displayName = "ResumeButton";
-
-const MoreInfoButton = memo(() => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
-
-  return (
-    <button
-      style={{
-        ...BUTTON_BASE_STYLE,
-        backgroundColor: isHovered
-          ? "rgba(109, 109, 110, 0.4)"
-          : "rgba(109, 109, 110, 0.7)",
-        color: "#fff",
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <Info size={20} />
-      More Info
-    </button>
-  );
-});
-
-MoreInfoButton.displayName = "MoreInfoButton";
 
 const ThumbnailCard = memo(({ image }: { image: string }) => {
   const [isHovered, setIsHovered] = useState(false);
