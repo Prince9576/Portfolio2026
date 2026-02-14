@@ -10,7 +10,6 @@ import { BG_START_TIME } from "../constants";
 import useMobilePortrait from "../hooks/useMobilePortrait";
 
 const Wrapper = () => {
-  const css3DContainerRef = useRef<HTMLDivElement>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const [showStartButton, setShowStartButton] = useState(false);
   const [sceneLoaded, setSceneLoaded] = useState(false);
@@ -53,18 +52,6 @@ const Wrapper = () => {
 
   return (
     <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
-      <div
-        ref={css3DContainerRef}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 1,
-        }}
-      />
       <Canvas
         className="r3f"
         shadows={{

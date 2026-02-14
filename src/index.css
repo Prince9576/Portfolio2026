@@ -46,8 +46,7 @@ body {
   background: #141414;
   border-radius: 3px;
   padding: 0;
-  overflow: hidden;
-  pointer-events: auto !important;
+  pointer-events: scroll !important;
   touch-action: pan-y pan-x;
   -webkit-overflow-scrolling: touch;
 }

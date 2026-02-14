@@ -37,8 +37,7 @@ const LOGO_STYLE: React.CSSProperties = {
 const SCROLL_CONTAINER_STYLE: React.CSSProperties = {
   width: "100%",
   height: "100%",
-  overflowY: "auto",
-  overflowX: "hidden",
+  overflowY: "scroll",
   scrollbarWidth: "thin",
   scrollbarColor: "#4a4a4a #141414",
   touchAction: "pan-y pan-x",
