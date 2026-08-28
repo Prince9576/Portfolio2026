@@ -8,6 +8,7 @@ import useAudioManager, { AudioType } from "../hooks/useAudioManager";
 import SoundController from "./SoundController";
 import { BG_START_TIME } from "../constants";
 import useMobilePortrait from "../hooks/useMobilePortrait";
+import Credits from "./Credits";
 
 const Wrapper = () => {
   const [isZoomed, setIsZoomed] = useState(false);
@@ -92,6 +93,7 @@ const Wrapper = () => {
       </Canvas>
       <EscapeButton isVisible={isZoomed} />
       {sceneLoaded && showSoundController && <SoundController />}
+      {sceneLoaded && <Credits />}
     </div>
   );
 };

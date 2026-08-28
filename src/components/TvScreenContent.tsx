@@ -425,10 +425,9 @@ const TvScreenContent = memo(({ onScreenClick }: TvScreenContentProps) => {
               <h1 style={TITLE_STYLE}>Prince Kumar</h1>
 
               <p style={DESCRIPTION_STYLE}>
-                Senior Frontend Developer with 6+ years of experience crafting
-                exceptional user experiences. Specialized in React, TypeScript,
-                and modern web technologies. Passionate about building
-                performant, scalable, and visually stunning applications.
+                7 years of frontend. React and TypeScript main class, performance
+                and reusable component libraries as my specialisation. Currently
+                grinding the large scale architecture tree.
               </p>
 
               <div style={BUTTONS_CONTAINER_STYLE}>
@@ -493,7 +492,7 @@ const ResumeButton = memo(() => {
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    window.open('https://drive.google.com/file/d/1bhHMyOH3EloEvbhOam6k5upCQPgmlcrr/view?usp=sharing', '_blank');
+    window.open('https://drive.google.com/file/d/1N2lESIf48134D8jV3Pt0ZJJsYqvitwS0/view?usp=sharing', '_blank');
   }, []);
 
   return (

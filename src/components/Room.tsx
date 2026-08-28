@@ -249,7 +249,7 @@ const Main = memo((props: { scale: number }) => {
           position-z={-0.2}
           rotation={[0, Math.PI / 2, 0]}
         >
-          SDE III | Frontend
+          SDE II | Frontend
           <meshStandardMaterial
             color="#dbe3ff"
             emissive="#7f9cff"
