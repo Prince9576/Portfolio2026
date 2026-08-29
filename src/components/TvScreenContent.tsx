@@ -1,7 +1,7 @@
 import { Download } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import useAudioManager, { AudioType } from "../hooks/useAudioManager";
-import { BG_START_TIME } from "../constants";
+import { BG_START_TIME, RESUME_URL } from "../constants";
 
 interface TvScreenContentProps {
   onScreenClick?: () => void;
@@ -492,7 +492,7 @@ const ResumeButton = memo(() => {
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    window.open('https://drive.google.com/file/d/1N2lESIf48134D8jV3Pt0ZJJsYqvitwS0/view?usp=sharing', '_blank');
+    window.open(RESUME_URL, '_blank');
   }, []);
 
   return (

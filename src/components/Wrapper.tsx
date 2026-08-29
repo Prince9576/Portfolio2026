@@ -9,6 +9,8 @@ import SoundController from "./SoundController";
 import { BG_START_TIME } from "../constants";
 import useMobilePortrait from "../hooks/useMobilePortrait";
 import Credits from "./Credits";
+import DownloadResume from "./DownloadResume";
+import MobileNotice from "./MobileNotice";
 
 const Wrapper = () => {
   const [isZoomed, setIsZoomed] = useState(false);
@@ -94,6 +96,8 @@ const Wrapper = () => {
       <EscapeButton isVisible={isZoomed} />
       {sceneLoaded && showSoundController && <SoundController />}
       {sceneLoaded && <Credits />}
+      {sceneLoaded && isMobilePortrait && <DownloadResume />}
+      {sceneLoaded && isMobilePortrait && <MobileNotice />}
     </div>
   );
 };

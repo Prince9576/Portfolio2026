@@ -60,3 +60,5 @@ export {
   PHONE_CAMERA_VIEW_PORTRAIT,
   BG_START_TIME,
 };
+
+export const RESUME_URL = "https://drive.google.com/file/d/1N2lESIf48134D8jV3Pt0ZJJsYqvitwS0/view?usp=sharing";
